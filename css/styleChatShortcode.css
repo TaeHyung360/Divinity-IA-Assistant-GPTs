@@ -1,0 +1,64 @@
+.divinity-ia-chat-container {
+    width: 100%; /* Ancho completo de la página */
+    max-width: 800px; /* Puedes ajustar esto según tus preferencias */
+    margin: auto; /* Centrar el chat */
+    border: 1px solid #ddd;
+    padding: 10px;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}
+
+.divinity-ia-chat-messages {
+    height: 150px;
+    overflow-y: auto;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    padding: 5px;
+    background-color: #fff;
+    color: #000; /* Texto negro */
+}
+
+
+.divinity-ia-chat-input-container {
+    display: flex;
+    gap: 10px; /* Espacio entre el campo de texto y el botón */
+    align-items: stretch; /* Asegurar que los hijos ocupen la misma altura */
+}
+
+#divinity-ia-chat-input {
+    flex-grow: 1; /* Hacer que el campo de texto ocupe el espacio restante */
+    padding: 5px;
+    resize: none; /* Deshabilitar el redimensionamiento manual */
+    overflow-y: auto; /* Permitir desplazamiento vertical si es necesario */
+}
+
+#divinity-ia-chat-submit {
+    flex-shrink: 0; /* Evitar que el botón cambie de tamaño */
+    border: none;
+    background-color: #4CAF50;
+    color: white;
+    cursor: pointer;
+    /* Alineación vertical del texto dentro del botón, si es necesario */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 10px; /* Ajusta el padding según necesites */
+}
+
+#divinity-ia-chat-submit:hover {
+    background-color: #45a049;
+}
+
+.loader {
+    border: 4px solid #f3f3f3; /* Light grey */
+    border-top: 4px solid #45a049; /* Blue */
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
