@@ -6,7 +6,6 @@
 // crear_thread_openai()
 //===================================================================================================================================================
 function crear_thread_openai() {
-    //$api_key = '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'; // Reemplaza esto con tu clave API real
     $api_key = get_option('aai_clave');
     $url = "https://api.openai.com/v1/threads";
     $args = [
@@ -32,7 +31,6 @@ function crear_thread_openai() {
 // borrar_thread_openai()
 //===================================================================================================================================================
 function borrar_thread_openai($thread_id) {
-    //$api_key = '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';
     $api_key = get_option('aai_clave');
     $url = "https://api.openai.com/v1/threads/$thread_id";
     $args = [
@@ -55,7 +53,6 @@ function borrar_thread_openai($thread_id) {
 // crear_mensaje_en_thread_openai()
 //===================================================================================================================================================
 function crear_mensaje_en_thread_openai($thread_id, $mensaje) {
-    //$api_key = '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'; 
     $api_key = get_option('aai_clave');
     $url = "https://api.openai.com/v1/threads/$thread_id/messages";
     $body = [
@@ -84,7 +81,6 @@ function crear_mensaje_en_thread_openai($thread_id, $mensaje) {
 // crear_run_en_thread_openai()
 //===================================================================================================================================================
 function crear_run_en_thread_openai($thread_id, $assistant_id) {
-    //$api_key = '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'; 
     $api_key = get_option('aai_clave');
     $url = "https://api.openai.com/v1/threads/$thread_id/runs";
     $body = [
@@ -117,7 +113,6 @@ function crear_run_en_thread_openai($thread_id, $assistant_id) {
 // listar_mensajes_de_thread_openai()
 //===================================================================================================================================================
 function listar_mensajes_de_thread_openai($thread_id) {
-    //$api_key = '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'; 
     $api_key = get_option('aai_clave');
     $url = "https://api.openai.com/v1/threads/$thread_id/messages";
     $args = [
@@ -152,7 +147,6 @@ function listar_mensajes_de_thread_openai($thread_id) {
 // recuperar_run_openai()
 //===================================================================================================================================================
 function recuperar_run_openai($thread_id, $run_id) {
-    //$api_key = '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'; 
     $api_key = get_option('aai_clave');
     $url = "https://api.openai.com/v1/threads/$thread_id/runs/$run_id";
     $args = [

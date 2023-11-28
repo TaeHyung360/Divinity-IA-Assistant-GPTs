@@ -46,6 +46,7 @@ function aai_admin_page() {
 }
 
 //===========================================================
+// Llamadas e inicializacion de archivos
 //===========================================================
 require_once plugin_dir_path(__FILE__) . 'chatShortcode.php';
 
