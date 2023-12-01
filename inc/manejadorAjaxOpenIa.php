@@ -1,8 +1,10 @@
 <?php
+require_once('obtencionDeProductos.php');
 //===================================================================================================================================================
 // manejar_mensaje_ajax()
 //===================================================================================================================================================
 function manejar_mensaje_ajax() {
+    
     // Define el ID de asistente de OpenAI
     //$assistant_id = 'asst_wE2Ka8DbcS2kclxMUffSFWaV';
     $assistant_id = get_option('aai_assistant_id');
@@ -65,6 +67,20 @@ function manejar_mensaje_ajax() {
     }
     wp_die(); // Esto es requerido para terminar adecuadamente la ejecución del script
 }
+/*
+function manejar_mensaje_ajax() {
+
+    // Limpia el mensaje recibido a través de POST
+    $mensaje = sanitize_text_field($_POST['mensaje']);
+
+    // Si el mensaje es "obtener productos", devuelve la lista de productos
+    if ($mensaje === 'obtener productos') {
+        $productos = obtenerProductos();
+        echo json_encode($productos);
+        wp_die();
+    }
+}
+*/
 
 // Registra la función como un 'action' para manejar mensajes AJAX en WordPress
 add_action('wp_ajax_enviar_mensaje_a_openai', 'manejar_mensaje_ajax');

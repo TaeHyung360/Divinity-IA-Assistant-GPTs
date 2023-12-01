@@ -44,7 +44,9 @@ function divinity_ia_chat_shortcode() {
                         success: function(response) {
                             // Procesar y mostrar la respuesta del servidor
                             console.log("Respuesta del servidor:", response);
-                            $('.divinity-ia-chat-messages').append('<div> RA:' + decodeURIComponent(escape(response)) + '</div>');
+                            var textoRespuesta = JSON.parse(response);
+                            $('.divinity-ia-chat-messages').append('<div>RA: ' + textoRespuesta + '</div>');
+                            //$('.divinity-ia-chat-messages').append('<div> RA:' + decodeURIComponent(escape(response)) + '</div>');
                             // Restaurar el estado de la interfaz
                             document.getElementById('loading').style.display = 'none';
                             document.getElementById('divinity-ia-chat-submit').style.display = 'block';
