@@ -1,10 +1,37 @@
 <?php
 require_once('obtencionDeProductos.php');
+require_once('guardadoDeProductos.php');
+require_once('verificarCreacionDelTxt.php');
+require_once('verificarIntegridadDelTxt.php');
 //===================================================================================================================================================
 // manejar_mensaje_ajax()
 //===================================================================================================================================================
 function manejar_mensaje_ajax() {
-    
+
+    $assistant_id = get_option('aai_assistant_id');
+
+    // Limpia el mensaje recibido a través de POST
+    $mensaje = sanitize_text_field($_POST['mensaje']);
+
+    if ($mensaje === 'obtener productos') {
+        if (verificarCreacionDelTxt()) {
+            // Verifica la integridad del archivo existente
+            $huboCambios = verificarIntegridadDelTxt();
+            if ($huboCambios) {
+                echo json_encode("Cambios detectados y archivo actualizado.");
+            } else {
+                echo json_encode("No se detectaron cambios. El archivo está actualizado.");
+            }
+        } else {
+            // Si no existe el archivo, obtiene los productos y los guarda
+            $productos = obtenerProductos();
+            guardarProductosEnTxt($productos);
+            $file_id = subir_un_archivo();
+            $res = modificar_asistente_openai($assistant_id, $file_id);
+            echo json_encode("Guardados los cambios. Y subido el archivo". $res);
+        }
+    }
+    /*
     // Define el ID de asistente de OpenAI
     //$assistant_id = 'asst_wE2Ka8DbcS2kclxMUffSFWaV';
     $assistant_id = get_option('aai_assistant_id');
@@ -65,7 +92,9 @@ function manejar_mensaje_ajax() {
             echo json_encode(['success' => false, 'message' => 'Tiempo de espera excedido.']);
         }
     }
+    */
     wp_die(); // Esto es requerido para terminar adecuadamente la ejecución del script
+
 }
 /*
 function manejar_mensaje_ajax() {
