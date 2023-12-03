@@ -10,33 +10,25 @@ function manejar_mensaje_ajax() {
 
     $assistant_id = get_option('aai_assistant_id');
 
-    // Limpia el mensaje recibido a través de POST
+    // Obtiene el mensaje recibido a través de POST
     $mensaje = sanitize_text_field($_POST['mensaje']);
 
-    if ($mensaje === 'obtener productos') {
-        if (verificarCreacionDelTxt()) {
-            // Verifica la integridad del archivo existente
-            $huboCambios = verificarIntegridadDelTxt();
-            if ($huboCambios) {
-                echo json_encode("Cambios detectados y archivo actualizado.");
-            } else {
-                echo json_encode("No se detectaron cambios. El archivo está actualizado.");
-            }
+    if (verificarCreacionDelTxt()) {
+        // Verifica la integridad del archivo existente
+        $huboCambios = verificarIntegridadDelTxt();
+        if ($huboCambios) {
+            //echo json_encode("Cambios detectados y archivo actualizado.");
         } else {
-            // Si no existe el archivo, obtiene los productos y los guarda
-            $productos = obtenerProductos();
-            guardarProductosEnTxt($productos);
-            $file_id = subir_un_archivo();
-            $res = modificar_asistente_openai($assistant_id, $file_id);
-            echo json_encode("Guardados los cambios. Y subido el archivo". $res);
+            //echo json_encode("No se detectaron cambios. El archivo está actualizado.");
         }
+    } else {
+        // Si no existe el archivo, obtiene los productos y los guarda
+        $productos = obtenerProductos();
+        guardarProductosEnTxt($productos);
+        $file_id = subir_un_archivo();
+        $res = modificar_asistente_openai($assistant_id, $file_id);
+        //echo json_encode("Guardados los cambios. Y subido el archivo". $res);
     }
-    /*
-    // Define el ID de asistente de OpenAI
-    //$assistant_id = 'asst_wE2Ka8DbcS2kclxMUffSFWaV';
-    $assistant_id = get_option('aai_assistant_id');
-    // Limpia el mensaje recibido a través de POST
-    $mensaje = sanitize_text_field($_POST['mensaje']);
 
    // Verificar si ya existe un ID de thread en la sesión
    if (!isset($_SESSION['openai_thread_id'])) {
@@ -54,11 +46,10 @@ function manejar_mensaje_ajax() {
         echo 'Error al gestionar el thread en OpenAI.';
         wp_die(); // Termina la ejecución del script
     }
-    
+
     // Crea un mensaje en el hilo de OpenAI
     $respuesta_mensaje = crear_mensaje_en_thread_openai($thread_id, $mensaje);
-
-    // Maneja posibles errores al conectar con OpenAI
+    // Contiene posibles errores al conectar con OpenAI
     if (is_wp_error($respuesta_mensaje)) {
         echo 'Error al conectar con OpenAI: ' . $respuesta_mensaje->get_error_message();
     } else {
@@ -92,14 +83,12 @@ function manejar_mensaje_ajax() {
             echo json_encode(['success' => false, 'message' => 'Tiempo de espera excedido.']);
         }
     }
-    */
     wp_die(); // Esto es requerido para terminar adecuadamente la ejecución del script
-
 }
 /*
 function manejar_mensaje_ajax() {
 
-    // Limpia el mensaje recibido a través de POST
+    // Obtiene el mensaje recibido a través de POST
     $mensaje = sanitize_text_field($_POST['mensaje']);
 
     // Si el mensaje es "obtener productos", devuelve la lista de productos
@@ -110,7 +99,6 @@ function manejar_mensaje_ajax() {
     }
 }
 */
-
 // Registra la función como un 'action' para manejar mensajes AJAX en WordPress
 add_action('wp_ajax_enviar_mensaje_a_openai', 'manejar_mensaje_ajax');
 // Registra para usuarios no autenticados

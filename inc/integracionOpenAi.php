@@ -7,7 +7,7 @@ function modificar_asistente_openai($assistant_id, $file_ids){
     $url = "https://api.openai.com/v1/assistants/$assistant_id";
 
     $body = [
-        'file_ids' => [$file_ids]  // Los IDs de los archivos aquí
+        'file_ids' => [$file_ids]  // Los IDs de los archivos
         // Se pueden agregar campos adicionales como 'model', 'name', 'description', etc., si es necesario
     ];
 
@@ -26,8 +26,7 @@ function modificar_asistente_openai($assistant_id, $file_ids){
     if (is_wp_error($response)) {
         return 'Error al conectar con OpenAI: ' . $response->get_error_message();
     }
-    //$body = wp_remote_retrieve_body($response);
-    //return json_decode($body);
+    
     $response_body = wp_remote_retrieve_body($response);
     $decoded_response = json_decode($response_body, true);
 

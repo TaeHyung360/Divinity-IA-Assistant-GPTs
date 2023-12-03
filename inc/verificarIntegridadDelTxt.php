@@ -1,13 +1,20 @@
 <?php
-
+//===================================================================================================================================================
+// verificarIntegridadDelTxt()
+//===================================================================================================================================================
+// Devuelve T,F si el archivo productos.txt contiene o no todos los productos de la base datos
+//===================================================================================================================================================
 require_once('obtencionDeProductos.php');
 require_once('guardadoDeProductos.php');
 
 function verificarIntegridadDelTxt() {
+    
+    // Obtiene todos los productos de la base de datos
     $productosActuales = obtenerProductos();
+    // Obtiene el contedido del archivo actual productos.txt
     $productosTxt = file_get_contents(plugin_dir_path(__FILE__) . 'productos.txt');
 
-    // Convierte los productos actuales en un formato de cadena para comparar
+    // Convierte los productos actuales de la base de datos a un formato de cadena para comparar
     $contenidoActual = "";
     foreach ($productosActuales as $producto) {
         $contenidoActual .= "ID: {$producto['ID']}\n";
