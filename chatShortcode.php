@@ -27,7 +27,8 @@ function divinity_ia_chat_shortcode() {
             
                 if(mensaje) {
                     // Añadir el mensaje del usuario al contenedor de mensajes
-                    $('.divinity-ia-chat-messages').append('<div>Usuario: ' + mensaje + '</div>');
+                    //$('.divinity-ia-chat-messages').append('<div>Usuario: ' + mensaje + '</div>');
+                    $('.divinity-ia-chat-messages').append('<div class="mensaje-usuario">Usuario: ' + mensaje + '</div>');
                     // Limpia el campo de entrada
                     $('#divinity-ia-chat-input').val(''); 
                     // Mostrar ícono de carga y ocultar botón de enviar
@@ -45,7 +46,8 @@ function divinity_ia_chat_shortcode() {
                             // Procesar y mostrar la respuesta del servidor
                             console.log("Respuesta del servidor:", response);
                             var textoRespuesta = JSON.parse(response);
-                            $('.divinity-ia-chat-messages').append('<div>RA: ' + textoRespuesta + '</div>');
+                            //$('.divinity-ia-chat-messages').append('<div>RA: ' + textoRespuesta + '</div>');
+                            $('.divinity-ia-chat-messages').append('<div class="respuesta-ra">RA: ' + textoRespuesta + '</div>');
                             //$('.divinity-ia-chat-messages').append('<div> RA:' + decodeURIComponent(escape(response)) + '</div>');
                             // Restaurar el estado de la interfaz
                             document.getElementById('loading').style.display = 'none';
@@ -54,7 +56,8 @@ function divinity_ia_chat_shortcode() {
                         error : function(jqXHR, textStatus, errorThrown) {
                             // Manejar errores en la petición AJAX
                             console.log('Error en la solicitud AJAX:', textStatus, errorThrown);
-                            $('#divinity-ia-chat-messages').append('<div>Error al procesar la solicitud.</div>');
+                            //$('#divinity-ia-chat-messages').append('<div>Error al procesar la solicitud.</div>');
+                            $('.divinity-ia-chat-messages').append('<div class="respuesta-ra">Error al procesar la solicitud.</div>');
                             // Restaurar el estado de la interfaz
                             document.getElementById('loading').style.display = 'none';
                             document.getElementById('divinity-ia-chat-submit').style.display = 'block';

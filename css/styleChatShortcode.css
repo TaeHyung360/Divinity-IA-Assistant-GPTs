@@ -15,6 +15,16 @@
     color: #000; 
 }
 
+.mensaje-usuario {
+    text-align: right;
+    margin-right: 10px; /* O el margen que prefieras */
+}
+
+.respuesta-ra {
+    text-align: left;
+    margin-left: 10px; /* O el margen que prefieras */
+}
+
 .divinity-ia-chat-input-container {
     display: flex;
     justify-content: flex-end; 
