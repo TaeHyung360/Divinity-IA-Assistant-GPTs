@@ -1,18 +1,69 @@
-.divinity-ia-chat-container {
-    width: 50%; 
-    max-width: 50%;
-    margin: auto; 
-    padding: 10px;
-    border-radius: 5px;
+/* Estilos Generales */
+.main-chat-shortcode {
+    margin: 0;
+    padding: 0;
+    height: 100%;
 }
 
-.divinity-ia-chat-messages {
-    height: 45rem;
+.menu-hamburguesa {
+    position: fixed;
+    top: 0;
+    right: 0;
+    z-index: 3;
+    cursor: pointer;
+}
+
+.container-main {
+    display: flex;
+    height: 100vh;
+}
+
+/* Estilo para dispositivos no móviles */
+.divinity-ia-products-column {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* Asegura que el botón se mantenga al fondo */
+    height: 87vh;
+    width: 320px;
     overflow-y: auto;
-    margin-bottom: 10px;
-    padding: 5px;
     background-color: #fff;
-    color: #000; 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.lista-de-productos{
+    display: flex;
+    list-style: none;
+    overflow-y: auto;
+    flex-direction: column;
+    padding: 1rem;
+    flex: 1;
+}
+
+.lista-de-productos li {
+    list-style-type: none; /* Elimina los marcadores de lista */
+    text-align: left; /* Alinea el texto a la izquierda */
+    width: 100%; /* Asegura que cada elemento de la lista ocupe toda la anchura disponible */
+    padding: 0.5em; /* Añade un poco de padding para espaciado visual */
+}
+
+.divinity-ia-chat-container {
+    width: 85%;
+    height: 100%;
+    overflow-y: auto;
+    background-color: #fff; /* Color de fondo ejemplo */
+    display: flex; /* Habilita flexbox para este contenedor */
+    flex-direction: column; /* Organiza los hijos en una columna */
+    height: 100%;
+    padding: 5rem;
+}
+
+
+.divinity-ia-chat-messages {
+    flex: 1; /* Esto hace que divinity-ia-chat-messages ocupe todo el espacio disponible */
+    overflow-y: auto; /* Permite el desplazamiento si el contenido es muy largo */
+    /* Ajusta los estilos adicionales según sea necesario */
 }
 
 .mensaje-usuario {
@@ -29,13 +80,14 @@
     display: flex;
     justify-content: flex-end; 
     align-items: center !important; 
-    width: 100%;
+    width: 50%;
     margin-left: auto; 
     margin-right: auto; 
     gap: 10px; 
     align-items: stretch; 
     border: 1.5px solid #70407b;
     border-radius: 15px;
+    margin-bottom: 5rem;
 }
 
 #divinity-ia-chat-input {
@@ -51,7 +103,7 @@
     flex-shrink: 0;
     width: 50px; 
     height: 50px; 
-    margin-right: 5px; 
+    margin-right: 1rem;
     border: none;
     background-color: #70407b;
     color: white;
@@ -77,23 +129,81 @@
     margin-right: 5px;
 }
 
+#add-to-cart-btn{
+    margin: 1rem;
+    width: 150px;
+    height: 50px;
+    border: none;
+    background-color: #70407b;
+    color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border-radius: 10px;
+}
+
+#add-to-cart-btn:hover {
+    background-color: #683475;
+}
+
+
 @keyframes spin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
 }
 
-/* Media query para dispositivos con pantalla de entre 765px y 1240px de ancho */
-@media (min-width: 765px) and (max-width: 1240px) {
-    .divinity-ia-chat-container { 
-        width: 80%; 
-        max-width: 80%;
+
+
+/* Estilos para dispositivos móviles */
+@media (max-width: 768px) {
+    .divinity-ia-products-column {
+        width: 100%;
+        height: 100%;
+        position: fixed;
+        top: 0;
+        left: -100%; /* Ocultar por defecto */
+        transition: left 0.3s; /* Animación para deslizar */
+        z-index: 2; /* Asegurar que esté por encima del chat */
     }
 
-}
-/* Media query para dispositivos con pantalla de hasta 768px de ancho */
-@media (max-width: 768px) {
     .divinity-ia-chat-container {
-        width: 100%; /* Ancho completo de la página */
-        max-width: 100%;
+        width: 100%;
+        height: 100%;
+        padding: 2rem;
+    }
+
+    .menu-hamburguesa {
+        display: block; /* Asumiendo que agregas un botón con esta clase para el menú */
+        position: fixed;
+        top: 0;
+        right: 0;
+        z-index: 3; /* Asegurar que el botón esté por encima de todo */
+    }
+
+    .divinity-ia-chat-input-container {
+        width: 95%;
+    }
+}
+
+@media (max-width: 1500px) {
+    .divinity-ia-chat-input-container {
+        width: 90%; /* Hace que el ancho sea del 100% para pantallas hasta 1024px */
+    }
+}
+
+@media (min-width: 769px) {
+    .divinity-ia-products-column {
+        width: 320px; /* Ancho fijo solo para escritorio */
+        /* Otros estilos para escritorio */
+    }
+
+    .divinity-ia-chat-container {
+        width: calc(100% - 320px); /* Ajuste para escritorio, teniendo en cuenta la columna fija */
+    }
+
+    .menu-hamburguesa {
+        display: none; /* Asegura que el botón hamburguesa no se muestra en escritorio */
     }
 }

@@ -9,18 +9,89 @@ function divinity_ia_chat_shortcode() {
     //==================================================================================================
     ?>
     <meta charset="UTF-8">
-    <div class="divinity-ia-chat-container">
-        <div class="divinity-ia-chat-messages"></div>
-        <div class="divinity-ia-chat-input-container">
-            <textarea id="divinity-ia-chat-input" placeholder="Escribe tu mensaje aquí..."></textarea>
-            <button id="divinity-ia-chat-submit">Enviar</button>
-            <!-- Ícono de carga que se muestra durante las peticiones AJAX -->
-            <div id="loading" style="display: none;">
-                <div class="loader"></div>
+    <div class="main-chat-shortcode">
+        <button class="menu-hamburguesa" onclick="toggleMenu()">☰ Menú</button> <!-- Botón menú hamburguesa -->
+
+        <div class="container-main">
+
+            <div class="divinity-ia-products-column">
+
+                    <h3>Productos Seleccionados</h3>
+
+                    <div class="lista-de-productos-container" style="flex-grow: 1; overflow-y: auto;">
+
+                        <ul class = "lista-de-productos">
+                            <li>
+                                <h7>Gigabyte Z790 GAMING X AX</h7>
+                                <p>Precio: 272.99€</p>
+                            </li>
+                            <li>
+                                <h7>Intel Core i7-13700F 2.1 GHz/5.2 GHz</h7>
+                                <p>Precio: 410.99€</p>
+                            </li>
+                            <li>
+                                <h7>Corsair Dominator Platinum RGB DDR5 6000MHz 64GB (2x32GB) CL40 Negro</h7>
+                                <p>Precio: 272.99€</p>
+                            </li>
+                            <li>
+                                <h7>Samsung 980 Pro SSD 1TB PCIe NVMe M.2</h7>
+                                <p>Precio: 90.87€</p>
+                            </li>
+                            <li>
+                                <h7>Gigabyte GeForce RTX 4070 GAMING OC 12 GB GDDR6X DLSS3</h7>
+                                <p>Precio: 709.89€</p>
+                            </li>
+                            <li>
+                                <h7>Lian Li PC-O11 Dynamic Cristal Templado USB 3.1 Negra</h7>
+                                <p>Precio: 128.93€</p>
+                            </li>
+                            <li>
+                                <h7>Gigabyte Aorus WaterForce X 360 Kit de Refrigeración Líquida</h7>
+                                <p>Precio: 268.11€</p>
+                            </li>
+                            <li>
+                                <h7>Gigabyte UD850GM PG5 850W 80 Plus Gold Full Modular</h7>
+                                <p>Precio: 115.99€</p>
+                            </li>
+                            <li>
+                                <h7>Thermal Grizzly Kryonaut Pasta Térmica 1gr</h7>
+                                <p>Precio: 10.07€</p>
+                            </li>
+                        
+                        </ul>
+
+                    </div>
+
+                <div class="divinity-ia-btn-carrito-container">
+
+                    <button id="add-to-cart-btn">Añadir al carrito</button>
+
+                </div>
+
+            </div>
+
+            <div class="divinity-ia-chat-container">
+                <div class="divinity-ia-chat-messages"></div>
+                    <div class="divinity-ia-chat-input-container">
+                        <textarea id="divinity-ia-chat-input" placeholder="Escribe tu mensaje aquí..."></textarea>
+                        <button id="divinity-ia-chat-submit">Enviar</button>
+                        <!-- Ícono de carga que se muestra durante las peticiones AJAX -->
+                        <div id="loading" style="display: none;">
+                            <div class="loader"></div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
     <script type="text/javascript">
+        function toggleMenu() {
+            var menu = document.querySelector('.divinity-ia-products-column');
+            if (menu.style.left === '-100%') {
+                menu.style.left = '0';
+            } else {
+                menu.style.left = '-100%';
+            }
+        }
         jQuery(document).ready(function($) {
             // Evento de clic en el botón de enviar
             $('#divinity-ia-chat-submit').on('click', function() {
@@ -75,12 +146,12 @@ function divinity_ia_chat_shortcode() {
                 }
             });
         });
+
         // Ajustar la altura del textarea automáticamente según su contenido
         document.getElementById('divinity-ia-chat-input').addEventListener('input', function() {
             this.style.height = 'auto';
             this.style.height = (this.scrollHeight) + 'px';
         });
-
 
         function convertirTextoAIaHTML(texto){
             // Convertir negritas: **texto** a <strong>texto</strong>
@@ -120,6 +191,7 @@ function divinity_ia_chat_shortcode() {
 
             return htmlFinal;
         }
+
     </script>
 
     <?php
