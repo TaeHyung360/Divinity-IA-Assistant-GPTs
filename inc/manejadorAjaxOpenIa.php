@@ -62,7 +62,7 @@ function manejar_mensaje_ajax() {
             // Inicia un ciclo para intentar recuperar la respuesta
             $intentos = 0;
             $maxIntentos = 10; // Número máximo de intentos
-            $espera = 5; // Tiempo de espera en segundos  
+            $espera = 10; // Tiempo de espera en segundos  
 
             while ($intentos < $maxIntentos) { 
                 $esCompletada = recuperar_run_openai($thread_id, $run_id);

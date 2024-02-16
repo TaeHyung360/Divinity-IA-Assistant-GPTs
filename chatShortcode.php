@@ -84,14 +84,6 @@ function divinity_ia_chat_shortcode() {
         </div>
     </div>
     <script type="text/javascript">
-        function toggleMenu() {
-            var menu = document.querySelector('.divinity-ia-products-column');
-            if (menu.style.left === '-100%') {
-                menu.style.left = '0';
-            } else {
-                menu.style.left = '-100%';
-            }
-        }
         jQuery(document).ready(function($) {
             // Evento de clic en el botón de enviar
             $('#divinity-ia-chat-submit').on('click', function() {
@@ -121,10 +113,16 @@ function divinity_ia_chat_shortcode() {
                             let textoRespuesta = JSON.parse(response);
                             console.log("Respuesta después de JSON.parse:", textoRespuesta);
 
+
+                            let textoHTML = "";
                             // Convierte el texto decodificado a HTML
-                            let textoHTML = convertirTextoAIaHTML(textoRespuesta);
-                            console.log("Texto convertido a HTML:", textoHTML);
-                            
+                            if (typeof textoRespuesta === 'string') {
+                                textoHTML = convertirTextoAIaHTML(textoRespuesta);
+                                console.log("Texto convertido a HTML:", textoHTML);
+                            } else {
+                                console.error("textoRespuesta no es una cadena:", textoRespuesta);
+                                textoHTML = "Error: la respuesta no es una cadena.";
+                            }
                             //var textoRespuesta = JSON.parse(textoHTML);
                             //$('.divinity-ia-chat-messages').append('<div>RA: ' + textoRespuesta + '</div>');
                             $('.divinity-ia-chat-messages').append('<div class="respuesta-ra">RA: ' + textoHTML + '</div>');
@@ -192,6 +190,14 @@ function divinity_ia_chat_shortcode() {
             return htmlFinal;
         }
 
+        function toggleMenu() {
+            var menu = document.querySelector('.divinity-ia-products-column');
+            if (menu.style.left === '-100%') {
+                menu.style.left = '0';
+            } else {
+                menu.style.left = '-100%';
+            }
+        }
     </script>
 
     <?php
