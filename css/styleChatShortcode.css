@@ -66,6 +66,15 @@
     /* Ajusta los estilos adicionales según sea necesario */
 }
 
+.nombre-usuario {
+    font-weight: bold;
+    color: #333;
+}
+.nombre-ra {
+    font-weight: bold;
+    color: #333;
+}
+
 .mensaje-usuario {
     text-align: right;
     margin-right: 10px; /* O el margen que prefieras */
@@ -74,6 +83,24 @@
 .respuesta-ra {
     text-align: left;
     margin-left: 10px; /* O el margen que prefieras */
+}
+
+.icono-usuario, .icono-ra {
+    display: inline-block;
+    width: 40px; /* Ajusta el tamaño según sea necesario */
+    height: 40px; /* Ajusta el tamaño según sea necesario */
+    border-radius: 50%; /* Hace que el elemento sea circular */
+    background-size: cover; /* Asegura que la imagen de fondo cubra completamente el espacio */
+    margin-right: 10px; /* Añade espacio entre el ícono y el texto */
+    background-color:#f9f9f9;
+}
+
+.icono-usuario {
+    background-image: url('../img/user_icon.png'); /* Establece la imagen de fondo para el usuario */
+}
+
+.icono-ra {
+    background-image: url('../img/Ra_icon2.png'); /* Establece la imagen de fondo para RA */
 }
 
 .divinity-ia-chat-input-container {

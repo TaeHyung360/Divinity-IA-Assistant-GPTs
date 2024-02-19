@@ -92,7 +92,7 @@ function divinity_ia_chat_shortcode() {
                 if(mensaje) {
                     // Añadir el mensaje del usuario al contenedor de mensajes
                     //$('.divinity-ia-chat-messages').append('<div>Usuario: ' + mensaje + '</div>');
-                    $('.divinity-ia-chat-messages').append('<div class="mensaje-usuario">Usuario: ' + mensaje + '</div>');
+                    $('.divinity-ia-chat-messages').append('<div class="mensaje-usuario"><span class="icono-usuario"></span><span class="nombre-usuario">Usuario:</span><br><br>' + mensaje + '<br><br><br></div>');
                     // Limpia el campo de entrada
                     $('#divinity-ia-chat-input').val(''); 
                     // Mostrar ícono de carga y ocultar botón de enviar
@@ -125,7 +125,7 @@ function divinity_ia_chat_shortcode() {
                             }
                             //var textoRespuesta = JSON.parse(textoHTML);
                             //$('.divinity-ia-chat-messages').append('<div>RA: ' + textoRespuesta + '</div>');
-                            $('.divinity-ia-chat-messages').append('<div class="respuesta-ra">RA: ' + textoHTML + '</div>');
+                            $('.divinity-ia-chat-messages').append('<div class="respuesta-ra"><span class="icono-ra"></span><span class="nombre-ra">RA:</span><br>' + textoHTML + '<br><br><br></div>');
                             //$('.divinity-ia-chat-messages').append('<div> RA:' + decodeURIComponent(escape(response)) + '</div>');
                             // Restaurar el estado de la interfaz
                             document.getElementById('loading').style.display = 'none';
