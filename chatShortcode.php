@@ -95,7 +95,7 @@ function divinity_ia_chat_shortcode() {
                                 $('.divinity-ia-chat-messages').append('<div class="respuesta-ra"><span class="icono-ra"></span><span class="nombre-ra">RA:</span><br>' + textoHTML + '<br><br><br></div>');
                                 //$('.divinity-ia-chat-messages').append('<div> RA:' + decodeURIComponent(escape(response)) + '</div>');
                                 // Procesar y mostrar los productos en el panel de la izquierda
-                                if (resultadoProcesado.listadoConLosComponentes && resultadoProcesado.listadoConLosComponentes.length > 0) {
+                                if (resultadoProcesado && resultadoProcesado.listadoConLosComponentes && resultadoProcesado.listadoConLosComponentes.length > 0) {
                                     let productosHTML = '<ul class="lista-de-productos">';
                                     resultadoProcesado.listadoConLosComponentes.forEach(function(producto) {
                                         productosHTML += '<li><h7>' + producto.nombre + '</h7><p>Precio: ' + producto.precio + '</p></li>'; // Corregido para adecuarse a la estructura
