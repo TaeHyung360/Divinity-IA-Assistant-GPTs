@@ -2,6 +2,10 @@
 function divinity_ia_chat_shortcode() {
     // Registrar y cargar la hoja de estilo para el chat
     wp_enqueue_style('divinity-ia-chat-style', plugins_url('css/styleChatShortcode.css', __FILE__));
+    //Llamada al archivo js divinity-convertirTextoAIaHTML
+    wp_enqueue_script('divinity-convertirTextoAIaHTML', plugins_url('js/convertirTextoAIaHTML.js', __FILE__), array('jquery'), null, true);
+    //Llamada al archivo js toggleMenu
+    wp_enqueue_script('divinity-toggleMenu', plugins_url('js/toggleMenu.js', __FILE__), array('jquery'), null, true);
     // Iniciar almacenamiento en búfer de salida
     ob_start();
     //==================================================================================================
@@ -10,6 +14,7 @@ function divinity_ia_chat_shortcode() {
     ?>
     <meta charset="UTF-8">
     <div class="main-chat-shortcode">
+
         <button class="menu-hamburguesa" onclick="toggleMenu()">☰ Menú</button> <!-- Botón menú hamburguesa -->
 
         <div class="container-main">
@@ -151,53 +156,6 @@ function divinity_ia_chat_shortcode() {
             this.style.height = (this.scrollHeight) + 'px';
         });
 
-        function convertirTextoAIaHTML(texto){
-            // Convertir negritas: **texto** a <strong>texto</strong>
-            let html = texto.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
-
-            // Dividir el texto en líneas
-            let lineas = html.split('\n');
-            let htmlFinal = '';
-            let enLista = false;
-
-            lineas.forEach((linea) => {
-                if (linea.startsWith('- ')) {
-                // Comprobar si empezamos una nueva lista
-                if (!enLista) {
-                    htmlFinal += '<ul>';
-                    enLista = true;
-                }
-                // Agregar elemento de lista
-                htmlFinal += `<li>${linea.slice(2)}</li>`;
-                } else {
-                // Si no es parte de una lista y hay una lista abierta, cerrarla
-                if (enLista) {
-                    htmlFinal += '</ul>';
-                    enLista = false;
-                }
-                // Agregar párrafo si la línea no está vacía
-                if (linea.trim() !== '') {
-                    htmlFinal += `<p>${linea}</p>`;
-                }
-                }
-            });
-
-            // Cerrar la lista si el texto termina en una lista
-            if (enLista) {
-                htmlFinal += '</ul>';
-            }
-
-            return htmlFinal;
-        }
-
-        function toggleMenu() {
-            var menu = document.querySelector('.divinity-ia-products-column');
-            if (menu.style.left === '-100%') {
-                menu.style.left = '0';
-            } else {
-                menu.style.left = '-100%';
-            }
-        }
     </script>
 
     <?php
