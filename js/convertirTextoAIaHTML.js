@@ -1,5 +1,6 @@
-
-
+//===================================================================================================================
+// Dado un string con formato MarkDown lo interpretamos y lo convertimos a html
+//===================================================================================================================
 function convertirTextoAIaHTML(texto){
     // Convertir negritas: **texto** a <strong>texto</strong>
     let html = texto.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
@@ -30,11 +31,9 @@ function convertirTextoAIaHTML(texto){
         }
         }
     });
-
     // Cerrar la lista si el texto termina en una lista
     if (enLista) {
         htmlFinal += '</ul>';
     }
-
     return htmlFinal;
 }

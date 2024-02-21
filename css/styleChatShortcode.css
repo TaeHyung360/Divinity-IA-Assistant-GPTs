@@ -59,6 +59,17 @@
     padding: 5rem;
 }
 
+.divinity-ia-chat-messages::-webkit-scrollbar,
+.lista-de-productos::-webkit-scrollbar {
+  display: none; /* Esto oculta la barra de desplazamiento para Chrome, Safari, Edge */
+}
+
+/* Firefox requiere una aproximación diferente */
+.divinity-ia-chat-messages,
+.lista-de-productos {
+  scrollbar-width: none; /* Oculta la barra de desplazamiento en Firefox */
+}
+
 
 .divinity-ia-chat-messages {
     flex: 1; /* Esto hace que divinity-ia-chat-messages ocupe todo el espacio disponible */
