@@ -79,6 +79,53 @@ function divinity_ia_chat_shortcode() {
                                 } else {
                                     console.log("No fue posible extraer o parsear el JSON.");
                                 }
+                                
+                                // Inicia la segunda solicitud AJAX para enviar textoRespuesta
+                                $.ajax({
+                                    url: '<?php echo admin_url('admin-ajax.php'); ?>',
+                                    type: 'POST',
+                                    data: {
+                                        action: 'extraer_urls_de_galeria_int', // Esta es la acción que manejará la solicitud en WordPress
+                                        respuesta: JSON.stringify(resultadoProcesado) // Aquí envías el textoRespuesta como parte de la data
+                                    },
+                                    success: function(responseGaleria) {
+                                        // Manejo de la respuesta de tu segunda solicitud AJAX
+                                        try {
+                                            let urlsGaleria = JSON.parse(responseGaleria);
+                                            console.log(urlsGaleria)
+                                            // Procesamiento de las URLs de la galería
+                                            if (resultadoProcesado && resultadoProcesado.listadoConLosComponentes && resultadoProcesado.listadoConLosComponentes.length > 0) {
+                                                let productosHTML = '<ul class="lista-de-productos">';
+                                                resultadoProcesado.listadoConLosComponentes.forEach(function(producto, index) {
+                                                    // Asume que `urlsGaleria` es un array con las URLs en el mismo orden que los productos
+                                                    let urlImagen = urlsGaleria[index]; // Acceder a la URL de la imagen usando el índice
+
+                                                    // Agregar la imagen al HTML del producto
+                                                    productosHTML += `<li>
+                                                        <img src="${urlImagen}" alt="${producto.nombre}" style="width: 70%; height: auto;">
+                                                        <h5>${producto.nombre}</h5>
+                                                        <p>Precio: ${producto.precio}</p>
+                                                    </li>`; 
+                                                });
+                                                productosHTML += '</ul>';
+                                                // Reemplazar el contenido de la lista de productos con los nuevos productos
+                                                $('.lista-de-productos-container').html(productosHTML);
+                                            }else {
+                                                // Mostrar un mensaje si no hay productos
+                                                $('.lista-de-productos-container').html('<p>No se encontraron productos.</p>');
+                                                // Restaurar el estado de la interfaz
+                                                document.getElementById('loading').style.display = 'none';
+                                                document.getElementById('divinity-ia-chat-submit').style.display = 'block';
+                                            }
+                                        } catch(e) {
+                                            console.error('Error al parsear las URLs de la galería: ', e);
+                                        }
+                                    },
+                                    error: function(jqXHR, textStatus, errorGaleria) {
+                                        console.log('Error en la solicitud AJAX de la galería:', textStatus, errorGaleria);
+                                    }
+                                });
+
                                 //Sustituimos el JSON incrustado en medio de la respuesta response e incrustamos los elementos que hay en medio en formato Markdown
                                 salidaMarkdown = extraerYParsearYReemplazarJSON(textoRespuesta)
                                 let textoHTML = "";
@@ -95,7 +142,7 @@ function divinity_ia_chat_shortcode() {
                                 $('.divinity-ia-chat-messages').append('<div class="respuesta-ra"><span class="icono-ra"></span><span class="nombre-ra">RA:</span><br>' + textoHTML + '<br><br><br></div>');
                                 //$('.divinity-ia-chat-messages').append('<div> RA:' + decodeURIComponent(escape(response)) + '</div>');
                                 // Procesar y mostrar los productos en el panel de la izquierda
-                                if (resultadoProcesado && resultadoProcesado.listadoConLosComponentes && resultadoProcesado.listadoConLosComponentes.length > 0) {
+                                /*if (resultadoProcesado && resultadoProcesado.listadoConLosComponentes && resultadoProcesado.listadoConLosComponentes.length > 0) {
                                     let productosHTML = '<ul class="lista-de-productos">';
                                     resultadoProcesado.listadoConLosComponentes.forEach(function(producto) {
                                         productosHTML += '<li><h7>' + producto.nombre + '</h7><p>Precio: ' + producto.precio + '</p></li>'; // Corregido para adecuarse a la estructura
@@ -110,6 +157,7 @@ function divinity_ia_chat_shortcode() {
                                     document.getElementById('loading').style.display = 'none';
                                     document.getElementById('divinity-ia-chat-submit').style.display = 'block';
                                 }
+                                */
                                 // Restaurar el estado de la interfaz
                                 document.getElementById('loading').style.display = 'none';
                                 document.getElementById('divinity-ia-chat-submit').style.display = 'block';
