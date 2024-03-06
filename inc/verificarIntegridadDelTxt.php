@@ -20,7 +20,7 @@ function verificarIntegridadDelTxt() {
         $contenidoActual .= "ID: {$producto['ID']}\n";
         $contenidoActual .= "Nombre: {$producto['nombre']}\n";
         $contenidoActual .= "Precio: {$producto['precio']}\n";
-        $contenidoActual .= "Galería: " . implode(', ', $producto['galeria']) . "\n";
+        $contenidoActual .= "Galería: {$producto['galeria']}\n";
         $contenidoActual .= "Estado de stock: {$producto['estado_stock']}\n";
         $contenidoActual .= "-----------------\n";
     }

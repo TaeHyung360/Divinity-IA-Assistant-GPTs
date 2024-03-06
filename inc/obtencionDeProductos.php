@@ -17,15 +17,18 @@ function obtenerProductos() {
     foreach ($productos as $producto) {
         // Obtener metadatos del producto, en la tabla postmeta y rescatamos los campos precio, imagen, estado de stock
         $precio = $wpdb->get_var($wpdb->prepare("SELECT meta_value FROM {$wpdb->prefix}postmeta WHERE post_id = %d AND meta_key = '_price'", $producto->ID));
-        $galeria = $wpdb->get_var($wpdb->prepare("SELECT meta_value FROM {$wpdb->prefix}postmeta WHERE post_id = %d AND meta_key = 'product_image_gallery'", $producto->ID));
+        $imagen_id = $wpdb->get_var($wpdb->prepare("SELECT meta_value FROM {$wpdb->prefix}postmeta WHERE post_id = %d AND meta_key = '_thumbnail_id'", $producto->ID));
         $estado_stock = $wpdb->get_var($wpdb->prepare("SELECT meta_value FROM {$wpdb->prefix}postmeta WHERE post_id = %d AND meta_key = '_stock_status'", $producto->ID));
+        
+        // Usar la ID de la imagen para obtener la URL de la imagen destacada
+        $imagen_url = $imagen_id ? wp_get_attachment_url($imagen_id) : '';
 
         // Agregar al array de respuesta con los valores de los productos
         $lista_productos[] = array(
             'ID' => $producto->ID,
             'nombre' => $producto->post_title,
             'precio' => $precio,
-            'galeria' => explode(',', $galeria), 
+            'galeria' => $imagen_url, 
             'estado_stock' => $estado_stock
         );
     }
