@@ -68,19 +68,21 @@ function divinity_ia_chat_shortcode() {
                         },
                         success: function(response) {
                             console.log("Respuesta del servidor antes de JSON.parse, como string:", response);
-                            // Analizar la respuesta JSON para obtener la cadena real
+                            
+                            try {
+                                // Intenta analizar la respuesta JSON para obtener la cadena real
                                 let textoRespuesta = JSON.parse(response);
                                 //console.log("Respuesta después de JSON.parse:", textoRespuesta);
                                 //console.log("Tipo de textoRespuesta después de JSON.parse:", typeof textoRespuesta);
                                 // Procesar la respuesta para extraer el mensaje y los productos
                                 let resultadoProcesado = procesadoDeRespuesta(textoRespuesta);
+                                
                                 if (resultadoProcesado) {
                                     console.log("JSON extraído y parseado:", resultadoProcesado);
                                 } else {
                                     console.log("No fue posible extraer o parsear el JSON.");
                                 }
-                                
-                                // Inicia la segunda solicitud AJAX para enviar textoRespuesta
+
                                 $.ajax({
                                     url: '<?php echo admin_url('admin-ajax.php'); ?>',
                                     type: 'POST',
@@ -126,7 +128,6 @@ function divinity_ia_chat_shortcode() {
                                     }
                                 });
 
-                                //Sustituimos el JSON incrustado en medio de la respuesta response e incrustamos los elementos que hay en medio en formato Markdown
                                 salidaMarkdown = extraerYParsearYReemplazarJSON(textoRespuesta)
                                 let textoHTML = "";
                                 // Convierte el texto decodificado a HTML
@@ -140,6 +141,25 @@ function divinity_ia_chat_shortcode() {
                                 //var textoRespuesta = JSON.parse(textoHTML);
                                 //$('.divinity-ia-chat-messages').append('<div>RA: ' + textoRespuesta + '</div>');
                                 $('.divinity-ia-chat-messages').append('<div class="respuesta-ra"><span class="icono-ra"></span><span class="nombre-ra">RA:</span><br>' + textoHTML + '<br><br><br></div>');
+
+                                document.getElementById('loading').style.display = 'none';
+                                document.getElementById('divinity-ia-chat-submit').style.display = 'block';
+
+                            } catch (error) {
+                                // Manejar el error, por ejemplo, si el JSON es inválido o no hay texto
+                                console.error("Error al parsear la respuesta:", error.message);
+                                //$('#divinity-ia-chat-messages').append('<div>Error al procesar la solicitud.</div>');
+                                $('.divinity-ia-chat-messages').append('<div class="respuesta-ra">Error al parsear la respuesta</div>');
+                                // Restaurar el estado de la interfaz
+                                document.getElementById('loading').style.display = 'none';
+                                document.getElementById('divinity-ia-chat-submit').style.display = 'block';
+                                // Aquí podrías manejar diferentes tipos de errores o realizar acciones específicas
+                                // Por ejemplo, puedes decidir loggear el error, enviarlo a un sistema de monitoreo, etc.
+                            }
+                                // Inicia la segunda solicitud AJAX para enviar textoRespuesta
+                                
+                                //Sustituimos el JSON incrustado en medio de la respuesta response e incrustamos los elementos que hay en medio en formato Markdown
+                                
                                 //$('.divinity-ia-chat-messages').append('<div> RA:' + decodeURIComponent(escape(response)) + '</div>');
                                 // Procesar y mostrar los productos en el panel de la izquierda
                                 /*if (resultadoProcesado && resultadoProcesado.listadoConLosComponentes && resultadoProcesado.listadoConLosComponentes.length > 0) {
@@ -159,8 +179,7 @@ function divinity_ia_chat_shortcode() {
                                 }
                                 */
                                 // Restaurar el estado de la interfaz
-                                document.getElementById('loading').style.display = 'none';
-                                document.getElementById('divinity-ia-chat-submit').style.display = 'block';
+                                
                         },
                         error : function(jqXHR, textStatus, errorThrown) {
                             // Manejar errores en la petición AJAX

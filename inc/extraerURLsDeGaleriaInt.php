@@ -1,31 +1,5 @@
 <?php
-// Agrega este código a tu functions.php o a un plugin específico
-/*
-add_action('wp_ajax_nopriv_obtener_urls_galeria', 'obtener_urls_galeria');
-add_action('wp_ajax_obtener_urls_galeria', 'obtener_urls_galeria');
 
-function obtener_urls_galeria() {
-    $json_data = json_decode(stripslashes($_POST['jsonData']), true);
-    $productos_path = get_template_directory() . 'productos.txt'; // Ajusta la ruta según donde hayas almacenado el archivo
-    $contenido = file_get_contents($productos_path);
-    $productos = explode("-----------------", $contenido);
-
-    $urls = [];
-
-    foreach ($productos as $producto) {
-        foreach ($json_data['listadoConLosComponentes'] as $componente) {
-            if (strpos($producto, $componente['nombre']) !== false) {
-                preg_match("/Galería: (.+)/", $producto, $matches);
-                if (!empty($matches[1])) {
-                    $urls[] = $matches[1];
-                }
-            }
-        }
-    }
-
-    wp_send_json_success($urls);
-}
-*/
 add_action('wp_ajax_extraer_urls_de_galeria_int', 'funcion_para_extraer_urls_de_galeria_int');
 add_action('wp_ajax_nopriv_extraer_urls_de_galeria_int', 'funcion_para_extraer_urls_de_galeria_int'); // Si necesitas que usuarios no logueados puedan hacer esta solicitud.
 
@@ -39,17 +13,29 @@ function funcion_para_extraer_urls_de_galeria_int() {
 
     $urls = [];
 
-    foreach ($productos as $producto) {
-        foreach ($respuesta['listadoConLosComponentes'] as $componente) {
+    // Asumiendo que cada nombre de componente es único
+    foreach ($respuesta['listadoConLosComponentes'] as $componente) {
+        foreach ($productos as $producto) {
             if (strpos($producto, $componente['nombre']) !== false) {
                 preg_match("/Galería: (.+)/", $producto, $matches);
                 if (!empty($matches[1])) {
-                    $urls[] = $matches[1];
+                    // Usa el nombre o ID del componente como clave
+                    $urls[$componente['nombre']] = $matches[1];
+                    break; // Rompe el ciclo interno una vez que encuentres la coincidencia
                 }
             }
         }
     }
 
-    echo json_encode($urls);
+    // Ordenar el arreglo de URLs según el arreglo de componentes
+    $urlsOrdenadas = [];
+    foreach ($respuesta['listadoConLosComponentes'] as $componente) {
+        if (array_key_exists($componente['nombre'], $urls)) {
+            $urlsOrdenadas[] = $urls[$componente['nombre']];
+        }
+    }
+
+    echo json_encode($urlsOrdenadas);
     wp_die(); // Esto es importante para terminar correctamente la ejecución en un manejador AJAX de WordPress
 }
+
