@@ -24,6 +24,7 @@ function divinity_ia_chat_shortcode() {
                     <h3>Productos Seleccionados</h3>
                     <div class="lista-de-productos-container" style="flex-grow: 1; overflow-y: auto;">
                         <ul class = "lista-de-productos">
+                        
                         </ul>
                     </div>
                 <div class="divinity-ia-btn-carrito-container">
@@ -88,7 +89,7 @@ function divinity_ia_chat_shortcode() {
                                     type: 'POST',
                                     data: {
                                         action: 'extraer_urls_de_galeria_int', // Esta es la acción que manejará la solicitud en WordPress
-                                        respuesta: JSON.stringify(resultadoProcesado) // Aquí envías el textoRespuesta como parte de la data
+                                        respuesta: JSON.stringify(resultadoProcesado) // Aquí envío el textoRespuesta como parte de la data
                                     },
                                     success: function(responseGaleria) {
                                         // Manejo de la respuesta de tu segunda solicitud AJAX

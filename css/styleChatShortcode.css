@@ -114,6 +114,12 @@
     background-image: url('../img/Ra_icon2.png'); /* Establece la imagen de fondo para RA */
 }
 
+.icono-de-carga-lista{
+    width: 90px; 
+    height: 90px;
+    background-image: url('../img/carga.gif');
+}
+
 .divinity-ia-chat-input-container {
     display: flex;
     justify-content: flex-end; 
