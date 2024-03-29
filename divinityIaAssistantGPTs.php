@@ -54,5 +54,7 @@ require_once plugin_dir_path(__FILE__) . 'inc/integracionOpenAi.php';
 
 require_once plugin_dir_path(__FILE__) . 'inc/manejadorAjaxOpenIa.php';
 
+require_once plugin_dir_path(__FILE__) . 'inc/manerajodrAjaxCarrito.php';
+
 require_once plugin_dir_path(__FILE__) . 'inc/extraerURLsDeGaleriaInt.php';
 

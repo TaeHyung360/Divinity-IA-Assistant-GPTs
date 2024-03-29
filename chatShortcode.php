@@ -45,6 +45,9 @@ function divinity_ia_chat_shortcode() {
         </div>
     </div>
     <script type="text/javascript">
+
+        let productosConfiguracionPC = {};
+
         jQuery(document).ready(function($) {
             // Evento de clic en el botón de enviar
             $('#divinity-ia-chat-submit').on('click', function() {
@@ -80,6 +83,7 @@ function divinity_ia_chat_shortcode() {
                                 
                                 if (resultadoProcesado) {
                                     console.log("JSON extraído y parseado:", resultadoProcesado);
+                                    productosConfiguracionPC = resultadoProcesado;
                                 } else {
                                     console.log("No fue posible extraer o parsear el JSON.");
                                 }
@@ -156,31 +160,7 @@ function divinity_ia_chat_shortcode() {
                                 document.getElementById('divinity-ia-chat-submit').style.display = 'block';
                                 // Aquí podrías manejar diferentes tipos de errores o realizar acciones específicas
                                 // Por ejemplo, puedes decidir loggear el error, enviarlo a un sistema de monitoreo, etc.
-                            }
-                                // Inicia la segunda solicitud AJAX para enviar textoRespuesta
-                                
-                                //Sustituimos el JSON incrustado en medio de la respuesta response e incrustamos los elementos que hay en medio en formato Markdown
-                                
-                                //$('.divinity-ia-chat-messages').append('<div> RA:' + decodeURIComponent(escape(response)) + '</div>');
-                                // Procesar y mostrar los productos en el panel de la izquierda
-                                /*if (resultadoProcesado && resultadoProcesado.listadoConLosComponentes && resultadoProcesado.listadoConLosComponentes.length > 0) {
-                                    let productosHTML = '<ul class="lista-de-productos">';
-                                    resultadoProcesado.listadoConLosComponentes.forEach(function(producto) {
-                                        productosHTML += '<li><h7>' + producto.nombre + '</h7><p>Precio: ' + producto.precio + '</p></li>'; // Corregido para adecuarse a la estructura
-                                    });
-                                    productosHTML += '</ul>';
-                                    // Reemplazar el contenido de la lista de productos con los nuevos productos
-                                    $('.lista-de-productos-container').html(productosHTML);
-                                } else {
-                                    // Mostrar un mensaje si no hay productos
-                                    $('.lista-de-productos-container').html('<p>No se encontraron productos.</p>');
-                                    // Restaurar el estado de la interfaz
-                                    document.getElementById('loading').style.display = 'none';
-                                    document.getElementById('divinity-ia-chat-submit').style.display = 'block';
-                                }
-                                */
-                                // Restaurar el estado de la interfaz
-                                
+                            }                                
                         },
                         error : function(jqXHR, textStatus, errorThrown) {
                             // Manejar errores en la petición AJAX
@@ -199,6 +179,38 @@ function divinity_ia_chat_shortcode() {
         document.getElementById('divinity-ia-chat-input').addEventListener('input', function() {
             this.style.height = 'auto';
             this.style.height = (this.scrollHeight) + 'px';
+        });
+
+        jQuery(document).ready(function($) {
+            $('#add-to-cart-btn').on('click', function() {
+                // Código que se ejecuta cuando el botón sea pulsado
+                // Comprobar si productoIds está vacío
+                let productoIds = productosConfiguracionPC.listadoConLosComponentes.map(producto => producto.ID);
+                if (productoIds.length === 0) {
+                    alert("No hay productos seleccionados para añadir al carrito.");
+                    return; // Detiene la ejecución de la función aquí
+                }  
+                console.log('El producto ha sido añadido al carrito');
+                var homeUrl = '<?php echo get_site_url(); ?>';
+            
+                    $.ajax({
+                        url: '<?php echo admin_url('admin-ajax.php'); ?>',
+                        type: 'POST',
+                        data: {
+                            action: 'añadir_al_carrito',
+                            productos: productoIds
+                        },
+                        success: function(response) {
+                        console.log('Respuesta del servidor:', response);
+                        if (response.success) {
+                            //alert("Productos añadidos al carrito correctamente.");
+                            window.location.href = homeUrl + '/carrito/';
+                        } else {
+                            alert("Hubo un error al añadir los productos al carrito.");
+                        }
+                    }
+                });
+            });
         });
     </script>
     <?php
