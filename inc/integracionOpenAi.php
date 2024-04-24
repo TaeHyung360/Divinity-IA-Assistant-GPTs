@@ -16,7 +16,7 @@ function modificar_asistente_openai($assistant_id, $file_ids){
         'headers' => [
             'Authorization' => 'Bearer ' . $api_key,
             'Content-Type' => 'application/json',
-            'OpenAI-Beta' => 'assistants=v1'
+            'OpenAI-Beta' => 'assistants=v2'
         ],
         'method' => 'POST',
         'data_format' => 'body'
@@ -48,7 +48,7 @@ function crear_thread_openai() {
         'headers' => [
             'Authorization' => 'Bearer ' . $api_key,
             'Content-Type' => 'application/json',
-            'OpenAI-Beta' => 'assistants=v1'  // Agregar el encabezado de seguridad
+            'OpenAI-Beta' => 'assistants=v2'  // Agregar el encabezado de seguridad
         ],
         'method' => 'POST', // Método HTTP POST para crear un recurso
         'data_format' => 'body' // Formato de datos como cuerpo de la solicitud
@@ -113,7 +113,7 @@ function borrar_thread_openai($thread_id) {
         'headers' => [
             'Authorization' => 'Bearer ' . $api_key,
             'Content-Type' => 'application/json',
-            'OpenAI-Beta' => 'assistants=v1'  
+            'OpenAI-Beta' => 'assistants=v2'  
         ],
         'method' => 'DELETE',
         'data_format' => 'body'
@@ -141,7 +141,7 @@ function crear_mensaje_en_thread_openai($thread_id, $mensaje) {
         'headers' => [
             'Authorization' => 'Bearer ' . $api_key,
             'Content-Type' => 'application/json',
-            'OpenAI-Beta' => 'assistants=v1'  
+            'OpenAI-Beta' => 'assistants=v2'  
         ],
         'method' => 'POST',
         'data_format' => 'body'
@@ -167,7 +167,7 @@ function crear_run_en_thread_openai($thread_id, $assistant_id) {
         'headers' => [
             'Authorization' => 'Bearer ' . $api_key,
             'Content-Type' => 'application/json',
-            'OpenAI-Beta' => 'assistants=v1'  
+            'OpenAI-Beta' => 'assistants=v2'  
         ],
         'method' => 'POST',
         'data_format' => 'body'
@@ -195,7 +195,7 @@ function listar_mensajes_de_thread_openai($thread_id) {
         'headers' => [
             'Authorization' => 'Bearer ' . $api_key,
             'Content-Type' => 'application/json',
-            'OpenAI-Beta' => 'assistants=v1'
+            'OpenAI-Beta' => 'assistants=v2'
         ],
         'method' => 'GET'
     ];
@@ -229,7 +229,7 @@ function recuperar_run_openai($thread_id, $run_id) {
         'headers' => [
             'Authorization' => 'Bearer ' . $api_key,
             'Content-Type' => 'application/json',
-            'OpenAI-Beta' => 'assistants=v1'
+            'OpenAI-Beta' => 'assistants=v2'
         ],
         'method' => 'GET'
     ]; 

@@ -2,14 +2,10 @@
 function divinity_ia_chat_shortcode() {
     // Registrar y cargar la hoja de estilo para el chat
     wp_enqueue_style('divinity-ia-chat-style', plugins_url('css/styleChatShortcode.css', __FILE__));
-    //Llamada al archivo js divinity-convertirTextoAIaHTML
-    wp_enqueue_script('divinity-convertirTextoAIaHTML', plugins_url('js/convertirTextoAIaHTML.js', __FILE__), array('jquery'), null, true);
     //Llamada al archivo js toggleMenu
     wp_enqueue_script('divinity-toggleMenu', plugins_url('js/toggleMenu.js', __FILE__), array('jquery'), null, true);
-    //Llamada al archivo js procesadoDeRespuesta
-    wp_enqueue_script('divinity-procesadoDeRespuesta', plugins_url('js/procesadoDeRespuesta.js', __FILE__), array('jquery'), null, true);
-    //Llamada al archivo js extraerYParsearYReemplazarJSON
-    wp_enqueue_script('divinity-extraerYParsearYReemplazarJSON', plugins_url('js/extraerYParsearYReemplazarJSON.js', __FILE__), array('jquery'), null, true);
+    //Llamada al archivo mostrarMensajesDeProgreso.js
+    wp_enqueue_script('divinity-progress-messages', plugins_url('js/mostrarMensajesDeProgreso.js', __FILE__), array('jquery'), null, true);
     // Iniciar almacenamiento en búfer de salida 
     ob_start();
     //==================================================================================================
@@ -24,7 +20,6 @@ function divinity_ia_chat_shortcode() {
                     <h3>Productos Seleccionados</h3>
                     <div class="lista-de-productos-container" style="flex-grow: 1; overflow-y: auto;">
                         <ul class = "lista-de-productos">
-                        
                         </ul>
                     </div>
                 <div class="divinity-ia-btn-carrito-container">
@@ -51,130 +46,147 @@ function divinity_ia_chat_shortcode() {
         jQuery(document).ready(function($) {
             // Evento de clic en el botón de enviar
             $('#divinity-ia-chat-submit').on('click', function() {
-            var mensaje = $('#divinity-ia-chat-input').val().trim();
-            
-                if(mensaje) {
-                    // Añadir el mensaje del usuario al contenedor de mensajes
-                    //$('.divinity-ia-chat-messages').append('<div>Usuario: ' + mensaje + '</div>');
-                    $('.divinity-ia-chat-messages').append('<div class="mensaje-usuario"><span class="icono-usuario"></span><span class="nombre-usuario">Usuario:</span><br><br>' + mensaje + '<br><br><br></div>');
-                    // Limpia el campo de entrada
-                    $('#divinity-ia-chat-input').val(''); 
-                    // Mostrar ícono de carga y ocultar botón de enviar
-                    document.getElementById('loading').style.display = 'block';
-                    document.getElementById('divinity-ia-chat-submit').style.display = 'none';
-                    // Petición AJAX para enviar el mensaje al servidor
-                    $.ajax({
-                        url : '<?php echo admin_url('admin-ajax.php'); ?>',
-                        type : 'POST',
-                        data : {
-                            action : 'enviar_mensaje_a_openai',
-                            mensaje : mensaje
-                        },
-                        success: function(response) {
-                            console.log("Respuesta del servidor antes de JSON.parse, como string:", response);
-                            
-                            try {
-                                // Intenta analizar la respuesta JSON para obtener la cadena real
-                                let textoRespuesta = JSON.parse(response);
-                                //console.log("Respuesta después de JSON.parse:", textoRespuesta);
-                                //console.log("Tipo de textoRespuesta después de JSON.parse:", typeof textoRespuesta);
-                                // Procesar la respuesta para extraer el mensaje y los productos
-                                let resultadoProcesado = procesadoDeRespuesta(textoRespuesta);
-                                
-                                if (resultadoProcesado) {
-                                    console.log("JSON extraído y parseado:", resultadoProcesado);
-                                    productosConfiguracionPC = resultadoProcesado;
-                                } else {
-                                    console.log("No fue posible extraer o parsear el JSON.");
-                                }
+                var mensaje = $('#divinity-ia-chat-input').val().trim();
+                    if(mensaje) {
+                        // Añadir el mensaje del usuario al contenedor de mensajes
+                        $('.divinity-ia-chat-messages').append('<div class="mensaje-usuario"><span class="icono-usuario"></span><span class="nombre-usuario">Usuario:</span><br><br>' + mensaje + '<br><br><br></div>');
+                        // Limpia el campo de entrada
+                        $('#divinity-ia-chat-input').val(''); 
+                        // Mostrar ícono de carga y ocultar botón de enviar
+                        document.getElementById('loading').style.display = 'block';
+                        document.getElementById('divinity-ia-chat-submit').style.display = 'none';
+                        // Iniciamos los mensajes de progreso
+                        var intervalId = mostrarMensajesDeProgreso();
+                        // Petición AJAX para enviar el mensaje al servidor
+                        $.ajax({
+                            url : '<?php echo admin_url('admin-ajax.php'); ?>',
+                            type : 'POST',
+                            data : {
+                                action : 'enviar_mensaje_a_openai',
+                                mensaje : mensaje
+                            },
+                            success: function(response) {
+                                clearInterval(intervalId);  // Detiene los mensajes de progreso
+                                jQuery('#mensaje-progreso').remove();  // Elimina el contenedor de mensajes de progreso
+                                // Manejar la respuesta
+                                console.log("Respuesta del servidor antes de JSON.parse, como string:", response);
+                                try {
+                                    // Intenta analizar la respuesta JSON para obtener la cadena real
+                                    let resultadoProcesado = JSON.parse(JSON.parse(response));
 
-                                $.ajax({
-                                    url: '<?php echo admin_url('admin-ajax.php'); ?>',
-                                    type: 'POST',
-                                    data: {
-                                        action: 'extraer_urls_de_galeria_int', // Esta es la acción que manejará la solicitud en WordPress
-                                        respuesta: JSON.stringify(resultadoProcesado) // Aquí envío el textoRespuesta como parte de la data
-                                    },
-                                    success: function(responseGaleria) {
-                                        // Manejo de la respuesta de tu segunda solicitud AJAX
-                                        try {
-                                            let urlsGaleria = JSON.parse(responseGaleria);
-                                            console.log(urlsGaleria)
-                                            // Procesamiento de las URLs de la galería
-                                            if (resultadoProcesado && resultadoProcesado.listadoConLosComponentes && resultadoProcesado.listadoConLosComponentes.length > 0) {
-                                                let productosHTML = '<ul class="lista-de-productos">';
-                                                resultadoProcesado.listadoConLosComponentes.forEach(function(producto, index) {
-                                                    // Asume que `urlsGaleria` es un array con las URLs en el mismo orden que los productos
-                                                    let urlImagen = urlsGaleria[index]; // Acceder a la URL de la imagen usando el índice
-
-                                                    // Agregar la imagen al HTML del producto
-                                                    productosHTML += `<li>
-                                                        <img src="${urlImagen}" alt="${producto.nombre}" style="width: 70%; height: auto;">
-                                                        <h5>${producto.nombre}</h5>
-                                                        <p>Precio: ${producto.precio}</p>
-                                                    </li>`; 
-                                                });
-                                                productosHTML += '</ul>';
-                                                // Reemplazar el contenido de la lista de productos con los nuevos productos
-                                                $('.lista-de-productos-container').html(productosHTML);
-                                            }else {
-                                                // Mostrar un mensaje si no hay productos
-                                                $('.lista-de-productos-container').html('<p>No se encontraron productos.</p>');
-                                                // Restaurar el estado de la interfaz
-                                                document.getElementById('loading').style.display = 'none';
-                                                document.getElementById('divinity-ia-chat-submit').style.display = 'block';
-                                            }
-                                        } catch(e) {
-                                            console.error('Error al parsear las URLs de la galería: ', e);
-                                        }
-                                    },
-                                    error: function(jqXHR, textStatus, errorGaleria) {
-                                        console.log('Error en la solicitud AJAX de la galería:', textStatus, errorGaleria);
+                                    if (resultadoProcesado.listadoConLosComponentes && resultadoProcesado.listadoConLosComponentes.length > 0) {
+                                        console.log("JSON extraído y parseado:", resultadoProcesado.listadoConLosComponentes );
+                                        productosConfiguracionPC = resultadoProcesado.listadoConLosComponentes;
+                                    } else {
+                                        console.log("No fue posible extraer o parsear el JSON.");
                                     }
-                                });
 
-                                salidaMarkdown = extraerYParsearYReemplazarJSON(textoRespuesta)
-                                let textoHTML = "";
-                                // Convierte el texto decodificado a HTML
-                                if (typeof salidaMarkdown === 'string') {
-                                    textoHTML = convertirTextoAIaHTML(salidaMarkdown);
-                                    console.log("Texto convertido a HTML:", textoHTML);
-                                } else {
-                                    console.error("resultadoProcesado no es una cadena:", salidaMarkdown);
-                                    textoHTML = "Error: la respuesta no es una cadena.";
-                                }
-                                //var textoRespuesta = JSON.parse(textoHTML);
-                                //$('.divinity-ia-chat-messages').append('<div>RA: ' + textoRespuesta + '</div>');
-                                $('.divinity-ia-chat-messages').append('<div class="respuesta-ra"><span class="icono-ra"></span><span class="nombre-ra">RA:</span><br>' + textoHTML + '<br><br><br></div>');
+                                    if (resultadoProcesado.listadoConLosComponentes && resultadoProcesado.listadoConLosComponentes.length > 0) {
 
-                                document.getElementById('loading').style.display = 'none';
-                                document.getElementById('divinity-ia-chat-submit').style.display = 'block';
+                                        $.ajax({
+                                            url: '<?php echo admin_url('admin-ajax.php'); ?>',
+                                            type: 'POST',
+                                            data: {
+                                                action: 'extraer_urls_de_galeria_int', // Esta es la acción que manejará la solicitud en WordPress
+                                                respuesta: JSON.stringify(resultadoProcesado) // Aquí envío el textoRespuesta como parte de la data
+                                            },
+                                            success: function(responseGaleria) {
+                                                // Manejo de la respuesta de tu segunda solicitud AJAX
+                                                try {
+                                                    let urlsGaleria = JSON.parse(responseGaleria);
+                                                    console.log(urlsGaleria)
+                                                    // Procesamiento de las URLs de la galería
+                                                    if (resultadoProcesado && resultadoProcesado.listadoConLosComponentes && resultadoProcesado.listadoConLosComponentes.length > 0) {
+                                                        let productosHTML = '<ul class="lista-de-productos">';
+                                                        resultadoProcesado.listadoConLosComponentes.forEach(function(producto, index) {
+                                                            // Asume que `urlsGaleria` es un array con las URLs en el mismo orden que los productos
+                                                            let urlImagen = urlsGaleria[index]; // Acceder a la URL de la imagen usando el índice
 
-                            } catch (error) {
-                                // Manejar el error, por ejemplo, si el JSON es inválido o no hay texto
-                                console.error("Error al parsear la respuesta:", error.message);
+                                                            // Agregar la imagen al HTML del producto
+                                                            productosHTML += `<li>
+                                                                <img src="${urlImagen}" alt="${producto.nombre}" style="width: 70%; height: auto;">
+                                                                <h5>${producto.nombre}</h5>
+                                                                <p>Precio: ${producto.precio}</p>
+                                                            </li>`; 
+                                                        });
+                                                        productosHTML += '</ul>';
+                                                        // Reemplazar el contenido de la lista de productos con los nuevos productos
+                                                        $('.lista-de-productos-container').html(productosHTML);
+                                                    }else {
+                                                        // Mostrar un mensaje si no hay productos
+                                                        $('.lista-de-productos-container').html('<p>No se encontraron productos.</p>');
+                                                        // Restaurar el estado de la interfaz
+                                                        document.getElementById('loading').style.display = 'none';
+                                                        document.getElementById('divinity-ia-chat-submit').style.display = 'block';
+                                                    }
+                                                } catch(e) {
+                                                    console.error('Error al parsear las URLs de la galería: ', e);
+                                                }
+                                            },
+                                            error: function(jqXHR, textStatus, errorGaleria) {
+                                                console.log('Error en la solicitud AJAX de la galería:', textStatus, errorGaleria);
+                                            }
+                                        });
+                                    } else {
+                                        // Ccaso donde no hay componentes nuevos para actualizar
+                                        console.log("No hay nuevos componentes para actualizar.");
+                                    }
+
+                                    // Toma el texto de la respuesta
+                                    const textoHTML = resultadoProcesado.respuesta;
+                                    
+                                    // Comienza a construir la salida
+                                    let htmlOutput = '<div class="respuesta-ra"><span class="icono-ra"></span><span class="nombre-ra">RA:</span><br>' + textoHTML + '<br>';
+
+                                    // Si el listado de componentes existe, añádelo al HTML como lista
+                                    if (resultadoProcesado.listadoConLosComponentes && resultadoProcesado.listadoConLosComponentes.length > 0) {
+                                        htmlOutput += '<ul>'; // comienzo de la lista
+
+                                        resultadoProcesado.listadoConLosComponentes.forEach((componente) => {
+                                            htmlOutput += '<li>' + 
+                                                componente.nombre + ' (' + componente.modelo + ') - ' + componente.precio + 
+                                                '</li>'; // cada componente en formato lista
+                                        });
+
+                                        htmlOutput += '</ul>'; // fin de la lista
+                                    }
+
+                                    // Cierre del bloque HTML
+                                    htmlOutput += '<br><br></div>';
+                                    // Agrega el contenido HTML a la página
+                                    $('.divinity-ia-chat-messages').append(htmlOutput);
+
+                                    document.getElementById('loading').style.display = 'none';
+                                    document.getElementById('divinity-ia-chat-submit').style.display = 'block';
+
+                                } catch (error) {
+                                    // Manejar el error, por ejemplo, si el JSON es inválido o no hay texto
+                                    console.error("Error al parsear la respuesta:", error.message);
+                                    //$('#divinity-ia-chat-messages').append('<div>Error al procesar la solicitud.</div>');
+                                    $('.divinity-ia-chat-messages').append('<div class="respuesta-ra">Error al parsear la respuesta</div>');
+                                    // Restaurar el estado de la interfaz
+                                    document.getElementById('loading').style.display = 'none';
+                                    document.getElementById('divinity-ia-chat-submit').style.display = 'block';
+                                    // Aquí podrías manejar diferentes tipos de errores o realizar acciones específicas
+                                    // Por ejemplo, puedes decidir loggear el error, enviarlo a un sistema de monitoreo, etc.
+                                }                                
+                            },
+                            error : function(jqXHR, textStatus, errorThrown) {
+                                clearInterval(intervalId);  // Detiene los mensajes de progreso
+                                jQuery('#mensaje-progreso').remove();  // Elimina el contenedor de mensajes de progreso
+                                // Manejar errores en la petición AJAX
+                                console.log('Error en la solicitud AJAX:', textStatus, errorThrown);
                                 //$('#divinity-ia-chat-messages').append('<div>Error al procesar la solicitud.</div>');
-                                $('.divinity-ia-chat-messages').append('<div class="respuesta-ra">Error al parsear la respuesta</div>');
+                                $('.divinity-ia-chat-messages').append('<div class="respuesta-ra">Error al procesar la solicitud.</div>');
                                 // Restaurar el estado de la interfaz
                                 document.getElementById('loading').style.display = 'none';
                                 document.getElementById('divinity-ia-chat-submit').style.display = 'block';
-                                // Aquí podrías manejar diferentes tipos de errores o realizar acciones específicas
-                                // Por ejemplo, puedes decidir loggear el error, enviarlo a un sistema de monitoreo, etc.
-                            }                                
-                        },
-                        error : function(jqXHR, textStatus, errorThrown) {
-                            // Manejar errores en la petición AJAX
-                            console.log('Error en la solicitud AJAX:', textStatus, errorThrown);
-                            //$('#divinity-ia-chat-messages').append('<div>Error al procesar la solicitud.</div>');
-                            $('.divinity-ia-chat-messages').append('<div class="respuesta-ra">Error al procesar la solicitud.</div>');
-                            // Restaurar el estado de la interfaz
-                            document.getElementById('loading').style.display = 'none';
-                            document.getElementById('divinity-ia-chat-submit').style.display = 'block';
-                        }
-                    });
-                }
+                            }
+                        });
+                    }
             });
         });
+        
         // Ajustar la altura del textarea automáticamente según su contenido
         document.getElementById('divinity-ia-chat-input').addEventListener('input', function() {
             this.style.height = 'auto';

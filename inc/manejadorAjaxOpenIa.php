@@ -85,20 +85,6 @@ function manejar_mensaje_ajax() {
     }
     wp_die(); // Esto es requerido para terminar adecuadamente la ejecución del script
 }
-/*
-function manejar_mensaje_ajax() {
-
-    // Obtiene el mensaje recibido a través de POST
-    $mensaje = sanitize_text_field($_POST['mensaje']);
-
-    // Si el mensaje es "obtener productos", devuelve la lista de productos
-    if ($mensaje === 'obtener productos') {
-        $productos = obtenerProductos();
-        echo json_encode($productos);
-        wp_die();
-    }
-}
-*/
 // Registra la función como un 'action' para manejar mensajes AJAX en WordPress
 add_action('wp_ajax_enviar_mensaje_a_openai', 'manejar_mensaje_ajax');
 // Registra para usuarios no autenticados
