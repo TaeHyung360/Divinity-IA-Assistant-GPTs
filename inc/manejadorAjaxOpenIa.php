@@ -1,33 +1,19 @@
 <?php
 require_once('obtencionDeProductos.php');
-require_once('guardadoDeProductos.php');
-require_once('verificarCreacionDelTxt.php');
-require_once('verificarIntegridadDelTxt.php');
 //===================================================================================================================================================
 // manejar_mensaje_ajax()
 //===================================================================================================================================================
 function manejar_mensaje_ajax() {
 
     $assistant_id = get_option('aai_assistant_id');
-
     // Obtiene el mensaje recibido a través de POST
     $mensaje = sanitize_text_field($_POST['mensaje']);
 
-    if (verificarCreacionDelTxt()) {
-        // Verifica la integridad del archivo existente
-        $huboCambios = verificarIntegridadDelTxt();
-        if ($huboCambios) {
-            //echo json_encode("Cambios detectados y archivo actualizado.");
-        } else {
-            //echo json_encode("No se detectaron cambios. El archivo está actualizado.");
-        }
-    } else {
-        // Si no existe el archivo, obtiene los productos y los guarda
-        $productos = obtenerProductos();
-        guardarProductosEnTxt($productos);
-        $file_id = subir_un_archivo();
-        $res = modificar_asistente_openai($assistant_id, $file_id);
-        //echo json_encode("Guardados los cambios. Y subido el archivo". $res);
+    // Comprueba si la sesión ya tiene la información del producto enviada
+    if (empty($_SESSION['productos_enviados'])) {
+        $resumenProductos = json_encode(obtenerProductos()); // Obtiene el resumen de los productos
+        $mensaje = "[Productos de la tienda: " . $resumenProductos . "] " . $mensaje;
+        $_SESSION['productos_enviados'] = true;  // Marca que los productos han sido enviados
     }
 
    // Verificar si ya existe un ID de thread en la sesión

@@ -77,6 +77,7 @@ function divinity_ia_chat_shortcode() {
                                     if (resultadoProcesado.listadoConLosComponentes && resultadoProcesado.listadoConLosComponentes.length > 0) {
                                         console.log("JSON extraído y parseado:", resultadoProcesado.listadoConLosComponentes );
                                         productosConfiguracionPC = resultadoProcesado.listadoConLosComponentes;
+                                        console.log("productosConfiguracionPC:", productosConfiguracionPC);
                                     } else {
                                         console.log("No fue posible extraer o parsear el JSON.");
                                     }
@@ -94,7 +95,7 @@ function divinity_ia_chat_shortcode() {
                                                 // Manejo de la respuesta de tu segunda solicitud AJAX
                                                 try {
                                                     let urlsGaleria = JSON.parse(responseGaleria);
-                                                    console.log(urlsGaleria)
+                                                    console.log("Las URL de la galeria:",urlsGaleria)
                                                     // Procesamiento de las URLs de la galería
                                                     if (resultadoProcesado && resultadoProcesado.listadoConLosComponentes && resultadoProcesado.listadoConLosComponentes.length > 0) {
                                                         let productosHTML = '<ul class="lista-de-productos">';
@@ -196,12 +197,13 @@ function divinity_ia_chat_shortcode() {
         jQuery(document).ready(function($) {
             $('#add-to-cart-btn').on('click', function() {
                 // Código que se ejecuta cuando el botón sea pulsado
-                // Comprobar si productoIds está vacío
-                let productoIds = productosConfiguracionPC.listadoConLosComponentes.map(producto => producto.ID);
-                if (productoIds.length === 0) {
+                console.log("productosConfiguracionPC:", productosConfiguracionPC);
+                if (!productosConfiguracionPC || productosConfiguracionPC.length === 0) {
                     alert("No hay productos seleccionados para añadir al carrito.");
                     return; // Detiene la ejecución de la función aquí
-                }  
+                }
+                // Comprobar si productoIds está vacío
+                let productoIds = productosConfiguracionPC.map(producto => producto.ID);  
                 console.log('El producto ha sido añadido al carrito');
                 var homeUrl = '<?php echo get_site_url(); ?>';
             
@@ -213,13 +215,17 @@ function divinity_ia_chat_shortcode() {
                             productos: productoIds
                         },
                         success: function(response) {
-                        console.log('Respuesta del servidor:', response);
-                        if (response.success) {
-                            //alert("Productos añadidos al carrito correctamente.");
-                            window.location.href = homeUrl + '/carrito/';
-                        } else {
-                            alert("Hubo un error al añadir los productos al carrito.");
-                        }
+                            console.log('Respuesta del servidor:', response);
+                            if (response.success) {
+                                //alert("Productos añadidos al carrito correctamente.");
+                                window.location.href = homeUrl + '/carrito/';
+                            } else {
+                                alert("Hubo un error al añadir los productos al carrito.");
+                            }
+                        },
+                        error: function(jqXHR, textStatus, errorThrown) {
+                        console.log('Error al añadir productos al carrito:', textStatus, errorThrown);
+                        alert("Error al procesar la solicitud.");
                     }
                 });
             });
