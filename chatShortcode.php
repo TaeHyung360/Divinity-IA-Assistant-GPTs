@@ -2,8 +2,6 @@
 function divinity_ia_chat_shortcode() {
     // Registrar y cargar la hoja de estilo para el chat
     wp_enqueue_style('divinity-ia-chat-style', plugins_url('css/styleChatShortcode.css', __FILE__));
-    //Llamada al archivo js toggleMenu
-    wp_enqueue_script('divinity-toggleMenu', plugins_url('js/toggleMenu.js', __FILE__), array('jquery'), null, true);
     //Llamada al archivo mostrarMensajesDeProgreso.js
     wp_enqueue_script('divinity-progress-messages', plugins_url('js/mostrarMensajesDeProgreso.js', __FILE__), array('jquery'), null, true);
     // Iniciar almacenamiento en búfer de salida 
@@ -14,7 +12,9 @@ function divinity_ia_chat_shortcode() {
     ?>
     <meta charset="UTF-8">
     <div class="main-chat-shortcode">
-        <button class="menu-hamburguesa" onclick="toggleMenu()">☰ Menú</button> <!-- Botón menú hamburguesa -->
+        <div class="center-btn-container">
+            <button id="toggle-products-btn">Mostrar Productos</button>
+        </div>
         <div class="container-main">
             <div class="divinity-ia-products-column">
                     <h3>Productos Seleccionados</h3>
@@ -193,6 +193,15 @@ function divinity_ia_chat_shortcode() {
             this.style.height = 'auto';
             this.style.height = (this.scrollHeight) + 'px';
         });
+
+        jQuery(document).ready(function($) {
+            // Manejar el clic del botón para mostrar/ocultar productos y el chat
+            $('#toggle-products-btn').click(function() {
+                $('.divinity-ia-products-column').toggle(); // Alterna la visibilidad del div de productos
+                $('.divinity-ia-chat-container').toggle(); // Alterna la visibilidad del div del chat
+            });
+        });
+
 
         jQuery(document).ready(function($) {
             $('#add-to-cart-btn').on('click', function() {

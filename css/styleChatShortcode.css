@@ -74,7 +74,17 @@
 .divinity-ia-chat-messages {
     flex: 1; /* Esto hace que divinity-ia-chat-messages ocupe todo el espacio disponible */
     overflow-y: auto; /* Permite el desplazamiento si el contenido es muy largo */
-    /* Ajusta los estilos adicionales según sea necesario */
+    height: 80%;
+}
+
+.lista-de-productos-container{
+    height: 65%;
+}
+
+.divinity-ia-btn-carrito-container{
+    display: flex;           /* Utiliza flexbox para el posicionamiento */
+    justify-content: center; /* Centra el contenido horizontalmente */
+    align-items: center;     /* Centra el contenido verticalmente */
 }
 
 .nombre-usuario {
@@ -192,7 +202,6 @@
     background-color: #683475;
 }
 
-
 @keyframes spin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
@@ -202,39 +211,53 @@
 
 /* Estilos para dispositivos móviles */
 @media (max-width: 768px) {
+    .center-btn-container {
+        display: flex;           /* Utiliza flexbox para el posicionamiento */
+        justify-content: center; /* Centra el contenido horizontalmente */
+        align-items: center;     /* Centra el contenido verticalmente */
+        height: 100%;            /* Asegura que el contenedor tenga una altura adecuada para centrar verticalmente */
+        width: 100%;             /* Asegura que el contenedor tenga un ancho adecuado */
+    }
     .divinity-ia-products-column {
+        display: none; /* Ocultar la columna de productos inicialmente */
         width: 100%;
         height: 100%;
-        position: fixed;
-        top: 0;
-        left: -100%; /* Ocultar por defecto */
-        transition: left 0.3s; /* Animación para deslizar */
-        z-index: 2; /* Asegurar que esté por encima del chat */
+    }
+
+    .divinity-ia-btn-carrito-container {
+        display: flex;           /* Utiliza flexbox para el posicionamiento */
+        justify-content: center; /* Centra el contenido horizontalmente */
+        align-items: center;     /* Centra el contenido verticalmente */
     }
 
     .divinity-ia-chat-container {
+        display: block; /* Muestra la columna de productos inicialmente */
         width: 100%;
         height: 100%;
         padding: 2rem;
     }
 
-    .menu-hamburguesa {
-        display: block; /* Asumiendo que agregas un botón con esta clase para el menú */
-        position: fixed;
-        top: 0;
-        right: 0;
-        z-index: 3; /* Asegurar que el botón esté por encima de todo */
-    }
-
     .divinity-ia-chat-input-container {
         width: 95%;
     }
+
+    #toggle-products-btn {
+        display: block;
+        background-color: #683475;
+        border-color: #683475;
+    }
+
+    .divinity-ia-chat-messages {
+        height: 60vh;
+    }
+
 }
 
 @media (max-width: 1500px) {
     .divinity-ia-chat-input-container {
         width: 90%; /* Hace que el ancho sea del 100% para pantallas hasta 1024px */
     }
+
 }
 
 @media (min-width: 769px) {
@@ -247,7 +270,18 @@
         width: calc(100% - 320px); /* Ajuste para escritorio, teniendo en cuenta la columna fija */
     }
 
-    .menu-hamburguesa {
-        display: none; /* Asegura que el botón hamburguesa no se muestra en escritorio */
+    #toggle-products-btn {
+        display: none;
+    }
+
+    .divinity-ia-products-column, .divinity-ia-chat-container {
+        display: block;
+    }
+
+}
+
+@media screen and (min-width: 1920px) {
+    .lista-de-productos-container{
+        height: 72%;
     }
 }
