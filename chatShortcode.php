@@ -111,7 +111,7 @@ function divinity_ia_chat_shortcode() {
                                                                 <img src="${urlImagen}" alt="${producto.nombre}" style="width: 70%; height: auto;">
                                                                 <h5>${producto.nombre}</h5>
                                                                 <p>Precio: ${producto.precio}</p>
-                                                                <button class="btn-add-to-cart" data-producto-id="${producto.ID}">Añadir al carrito</button>
+                                                                <button style="background: none; border: none; color: #683475; cursor: pointer; font-size: 1rem; transition: color 0.3s;" id="add-to-cart-button" data-producto-id="${producto.ID}">Añadir al carrito</button>
                                                             </li>`; 
                                                         });
                                                         productosHTML += '</ul>';
@@ -243,6 +243,8 @@ function divinity_ia_chat_shortcode() {
                 // Comprobar si productoIds está vacío
                 let productoIds = productosConfiguracionPC.map(producto => producto.ID);  
                 console.log('El producto ha sido añadido al carrito');
+                console.log('Añadiendo al carrito el producto con ID:', productoIds);
+                console.log(typeof productoIds);
                 var homeUrl = '<?php echo get_site_url(); ?>';
             
                     $.ajax({
@@ -270,7 +272,6 @@ function divinity_ia_chat_shortcode() {
         });
 
         jQuery(document).ready(function($) {
-            // Delegación de evento para manejar clic en cualquier botón de "Añadir al carrito"
             $('.lista-de-productos-container').on('click', '.btn-add-to-cart', function() {
                 let productoId = $(this).data('producto-id');
                 console.log('Añadiendo al carrito el producto con ID:', productoId);
@@ -279,17 +280,19 @@ function divinity_ia_chat_shortcode() {
                     url: '<?php echo admin_url('admin-ajax.php'); ?>',
                     type: 'POST',
                     data: {
-                        action: 'añadir_al_carrito',
-                        producto_id: [productoId]
+                        action: 'anadir_un_producto_al_carrito',
+                        producto_id: productoId
                     },
                     success: function(response) {
+                        console.log('Respuesta del servidor:', response);
                         if (response.success) {
                             alert("Producto añadido al carrito correctamente.");
                         } else {
-                            alert("Hubo un error al añadir el producto al carrito: " + response.data);
+                            alert("Hubo un error al añadir el producto al carrito.");
                         }
                     },
-                    error: function() {
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        console.log('Error al añadir producto al carrito:', textStatus, errorThrown);
                         alert("Error al procesar la solicitud.");
                     }
                 });

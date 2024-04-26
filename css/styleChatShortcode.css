@@ -251,7 +251,7 @@
         height: 60vh;
     }
 
-    #btn-add-to-cart {
+    .add-to-cart {
         background: none; /* Sin fondo */
         border: none; /* Sin borde */
         color: #683475; /* Color morado */
@@ -261,7 +261,7 @@
         transition: color 0.3s; /* Transición suave del color */
     }
     
-    #btn-add-to-cart:hover {
+    .add-to-cart:hover {
         color: #b19cd9; /* Un morado más claro cuando se pasa el mouse */
     }
 
