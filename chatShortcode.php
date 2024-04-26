@@ -23,7 +23,7 @@ function divinity_ia_chat_shortcode() {
                         </ul>
                     </div>
                 <div class="divinity-ia-btn-carrito-container">
-                    <button id="add-to-cart-btn">Añadir al carrito</button>
+                    <button id="add-to-cart-btn">Añadir todos</button>
                 </div>
             </div>
             <div class="divinity-ia-chat-container">
@@ -57,6 +57,9 @@ function divinity_ia_chat_shortcode() {
                         document.getElementById('divinity-ia-chat-submit').style.display = 'none';
                         // Iniciamos los mensajes de progreso
                         var intervalId = mostrarMensajesDeProgreso();
+
+                        // Asegurarse de que el nuevo mensaje sea visible
+                        scrollToBottom();
                         // Petición AJAX para enviar el mensaje al servidor
                         $.ajax({
                             url : '<?php echo admin_url('admin-ajax.php'); ?>',
@@ -108,6 +111,7 @@ function divinity_ia_chat_shortcode() {
                                                                 <img src="${urlImagen}" alt="${producto.nombre}" style="width: 70%; height: auto;">
                                                                 <h5>${producto.nombre}</h5>
                                                                 <p>Precio: ${producto.precio}</p>
+                                                                <button class="btn-add-to-cart" data-producto-id="${producto.ID}">Añadir al carrito</button>
                                                             </li>`; 
                                                         });
                                                         productosHTML += '</ul>';
@@ -135,9 +139,11 @@ function divinity_ia_chat_shortcode() {
 
                                     // Toma el texto de la respuesta
                                     const textoHTML = resultadoProcesado.respuesta;
+
+                                    const textoConvertidoHTML = simpleMarkdownToHTML(textoHTML);
                                     
                                     // Comienza a construir la salida
-                                    let htmlOutput = '<div class="respuesta-ra"><span class="icono-ra"></span><span class="nombre-ra">RA:</span><br>' + textoHTML + '<br>';
+                                    let htmlOutput = '<div class="respuesta-ra"><span class="icono-ra"></span><span class="nombre-ra">RA:</span><br>' + textoConvertidoHTML + '<br>';
 
                                     // Si el listado de componentes existe, añádelo al HTML como lista
                                     if (resultadoProcesado.listadoConLosComponentes && resultadoProcesado.listadoConLosComponentes.length > 0) {
@@ -187,6 +193,30 @@ function divinity_ia_chat_shortcode() {
                     }
             });
         });
+
+        function scrollToBottom() {
+            var messagesContainer = jQuery('.divinity-ia-chat-messages');
+            messagesContainer.scrollTop(messagesContainer.prop("scrollHeight"));
+        }
+
+        function simpleMarkdownToHTML(text) {
+            // Convertir encabezados
+            text = text.replace(/^### (.*$)/gim, '<h3>$1</h3>');
+            text = text.replace(/^## (.*$)/gim, '<h2>$1</h2>');
+            text = text.replace(/^# (.*$)/gim, '<h1>$1</h1>');
+
+            // Convertir negritas e itálicas
+            text = text.replace(/\*\*(.*)\*\*/gim, '<strong>$1</strong>');
+            text = text.replace(/\*(.*)\*/gim, '<em>$1</em>');
+
+            // Convertir enlaces
+            text = text.replace(/\[([^\]]+)\]\(([^)]+)\)/gim, '<a href="$2">$1</a>');
+
+            // Convertir saltos de línea a etiquetas <br>
+            text = text.replace(/\n/gim, '<br>');
+
+            return text;
+        }
         
         // Ajustar la altura del textarea automáticamente según su contenido
         document.getElementById('divinity-ia-chat-input').addEventListener('input', function() {
@@ -201,7 +231,6 @@ function divinity_ia_chat_shortcode() {
                 $('.divinity-ia-chat-container').toggle(); // Alterna la visibilidad del div del chat
             });
         });
-
 
         jQuery(document).ready(function($) {
             $('#add-to-cart-btn').on('click', function() {
@@ -234,6 +263,33 @@ function divinity_ia_chat_shortcode() {
                         },
                         error: function(jqXHR, textStatus, errorThrown) {
                         console.log('Error al añadir productos al carrito:', textStatus, errorThrown);
+                        alert("Error al procesar la solicitud.");
+                    }
+                });
+            });
+        });
+
+        jQuery(document).ready(function($) {
+            // Delegación de evento para manejar clic en cualquier botón de "Añadir al carrito"
+            $('.lista-de-productos-container').on('click', '.btn-add-to-cart', function() {
+                let productoId = $(this).data('producto-id');
+                console.log('Añadiendo al carrito el producto con ID:', productoId);
+
+                $.ajax({
+                    url: '<?php echo admin_url('admin-ajax.php'); ?>',
+                    type: 'POST',
+                    data: {
+                        action: 'añadir_al_carrito',
+                        producto_id: [productoId]
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            alert("Producto añadido al carrito correctamente.");
+                        } else {
+                            alert("Hubo un error al añadir el producto al carrito: " + response.data);
+                        }
+                    },
+                    error: function() {
                         alert("Error al procesar la solicitud.");
                     }
                 });
