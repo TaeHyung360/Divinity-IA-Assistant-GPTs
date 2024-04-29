@@ -19,19 +19,24 @@ function funcion_para_extraer_urls_de_galeria_int() {
     $urls = [];
 
     foreach ($respuesta['listadoConLosComponentes'] as $componente) {
+        $urlEncontrada = false;
         foreach ($productos as $producto) {
-            // Comparar el nombre del componente con el nombre del producto
+            // Comparar el nombre del componente con el nombre del producto, ignorando diferencias en mayúsculas/minúsculas
             if (strcasecmp($producto['nombre'], $componente['nombre']) == 0) {
                 if (!empty($producto['galeria'])) {
-                    // Usa el nombre o ID del componente como clave
                     $urls[$componente['nombre']] = $producto['galeria'];
-                    break; // Rompe el ciclo interno una vez que encuentra la coincidencia
+                    $urlEncontrada = true;
+                    break; // Rompe el ciclo una vez que encuentra una coincidencia
                 }
             }
         }
+        // Si no se encuentra una URL específica, asigna una imagen predeterminada
+        if (!$urlEncontrada) {
+            $urls[$componente['nombre']] = plugins_url('../img/default-product-image.jpg', __FILE__);
+        }
     }
 
-    // Ordenar el array de URLs según el array de componentes
+    // Ordenar el array de URLs para que coincidan con el orden de los componentes en la respuesta
     $urlsOrdenadas = [];
     foreach ($respuesta['listadoConLosComponentes'] as $componente) {
         if (array_key_exists($componente['nombre'], $urls)) {
@@ -40,5 +45,5 @@ function funcion_para_extraer_urls_de_galeria_int() {
     }
 
     echo json_encode($urlsOrdenadas);
-    wp_die(); 
+    wp_die();
 }
