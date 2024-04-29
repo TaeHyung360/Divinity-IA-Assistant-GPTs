@@ -23,11 +23,13 @@ function divinity_ia_chat_shortcode() {
                         </ul>
                     </div>
                 <div class="divinity-ia-btn-carrito-container">
-                    <button id="add-to-cart-btn">Añadir todos</button>
+                    <button id="add-to-cart-btn">Añade todos los prductos al carrito</button>
                 </div>
             </div>
             <div class="divinity-ia-chat-container">
-                <div class="divinity-ia-chat-messages"></div>
+                <div class="divinity-ia-chat-messages">
+                <div class="respuesta-ra"><span class="icono-ra"></span><span class="nombre-ra">RA:</span><br>¡Hola! ¿Cómo puedo ayudarte hoy? Si necesitas asesoría para armar un PC o tienes alguna consulta específica sobre componentes de ordenador, estoy aquí para ayudarte. ↓↓↓<br><br><br></div>
+                </div>
                     <div class="divinity-ia-chat-input-container">
                         <textarea id="divinity-ia-chat-input" placeholder="Escribe tu mensaje aquí..."></textarea>
                         <button id="divinity-ia-chat-submit">Enviar</button>
