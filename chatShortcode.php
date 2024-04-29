@@ -111,7 +111,7 @@ function divinity_ia_chat_shortcode() {
                                                                 <img src="${urlImagen}" alt="${producto.nombre}" style="width: 70%; height: auto;">
                                                                 <h5>${producto.nombre}</h5>
                                                                 <p>Precio: ${producto.precio}</p>
-                                                                <button style="background: none; border: none; color: #683475; cursor: pointer; font-size: 1rem; transition: color 0.3s;" id="add-to-cart-button" data-producto-id="${producto.ID}">Añadir al carrito</button>
+                                                                <button style="background: none; border: none; color: #683475; cursor: pointer; font-size: 1rem; transition: color 0.3s;" class="add-to-cart-button" data-producto-id="${producto.ID}">Añadir al carrito</button>
                                                             </li>`; 
                                                         });
                                                         productosHTML += '</ul>';
@@ -272,28 +272,27 @@ function divinity_ia_chat_shortcode() {
         });
 
         jQuery(document).ready(function($) {
-            $('.lista-de-productos-container').on('click', '.btn-add-to-cart', function() {
-                // Código que se ejecuta cuando el botón btn-add-to-cart sea pulsado
-                let productoId = $(this).data('producto-id');
-                console.log('Añadiendo al carrito el producto con ID:', productoId);
+            // Delegación de eventos para manejar clics en botones que se agregan dinámicamente
+            $('.lista-de-productos-container').on('click', '.add-to-cart-button', function() {
+                var productoId = $(this).data('producto-id'); // Obtener el ID del producto desde el atributo data
+
+                // Ejecutar la solicitud AJAX para añadir el producto al carrito
                 $.ajax({
-                    url: '<?php echo admin_url('admin-ajax.php'); ?>',
+                    url: '<?php echo admin_url('admin-ajax.php'); ?>', // URL a la que se hace la solicitud AJAX
                     type: 'POST',
                     data: {
-                        action: 'anadir_un_producto_al_carrito',
-                        producto_id: productoId
+                        action: 'anadir_un_producto_al_carrito', // La acción en WordPress que maneja la solicitud
+                        producto_id: productoId // ID del producto a añadir
                     },
                     success: function(response) {
-                        console.log('Respuesta del servidor:', response);
-                        if (response.success) {
-                            alert("Producto añadido al carrito correctamente.");
+                        if(response.success) {
+                            alert('Producto añadido al carrito'); // Mensaje de éxito
                         } else {
-                            alert("Hubo un error al añadir el producto al carrito.");
+                            alert('Error al añadir el producto al carrito'); // Mensaje de error
                         }
                     },
-                    error: function(jqXHR, textStatus, errorThrown) {
-                        console.log('Error al añadir producto al carrito:', textStatus, errorThrown);
-                        alert("Error al procesar la solicitud.");
+                    error: function() {
+                        alert('Error al realizar la solicitud'); // Manejo de errores en la solicitud AJAX
                     }
                 });
             });

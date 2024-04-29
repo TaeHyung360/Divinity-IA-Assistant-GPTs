@@ -25,4 +25,5 @@ function añadir_un_producto_al_carrito() {
     }
 
     wp_send_json($resultado);
+    wp_die();
 }
