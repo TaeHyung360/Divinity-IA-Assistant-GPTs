@@ -22,7 +22,7 @@
 .divinity-ia-products-column {
     display: flex;
     flex-direction: column;
-    justify-content: space-between; /* Asegura que el botón se mantenga al fondo */
+    justify-content: space-between; /* Para que el botón se mantenga al fondo */
     height: 87vh;
     width: 320px;
     overflow-y: auto;
@@ -44,7 +44,7 @@
 .lista-de-productos li {
     list-style-type: none; /* Elimina los marcadores de lista */
     text-align: left; /* Alinea el texto a la izquierda */
-    width: 100%; /* Asegura que cada elemento de la lista ocupe toda la anchura disponible */
+    width: 100%; 
     padding: 0.5em; /* Añade un poco de padding para espaciado visual */
 }
 
@@ -54,7 +54,7 @@
     overflow-y: auto;
     background-color: #fff; /* Color de fondo ejemplo */
     display: flex; /* Habilita flexbox para este contenedor */
-    flex-direction: column; /* Organiza los hijos en una columna */
+    flex-direction: column; 
     height: 100%;
     padding: 5rem;
 }
@@ -64,7 +64,6 @@
   display: none; /* Esto oculta la barra de desplazamiento para Chrome, Safari, Edge */
 }
 
-/* Firefox requiere una aproximación diferente */
 .divinity-ia-chat-messages,
 .lista-de-productos {
   scrollbar-width: none; /* Oculta la barra de desplazamiento en Firefox */
@@ -72,8 +71,8 @@
 
 
 .divinity-ia-chat-messages {
-    flex: 1; /* Esto hace que divinity-ia-chat-messages ocupe todo el espacio disponible */
-    overflow-y: auto; /* Permite el desplazamiento si el contenido es muy largo */
+    flex: 1; 
+    overflow-y: auto; 
     height: 80%;
 }
 
@@ -98,18 +97,18 @@
 
 .mensaje-usuario {
     text-align: right;
-    margin-right: 10px; /* O el margen que prefieras */
+    margin-right: 10px; 
 }
 
 .respuesta-ra {
     text-align: left;
-    margin-left: 10px; /* O el margen que prefieras */
+    margin-left: 10px; 
 }
 
 .icono-usuario, .icono-ra {
     display: inline-block;
-    width: 40px; /* Ajusta el tamaño según sea necesario */
-    height: 40px; /* Ajusta el tamaño según sea necesario */
+    width: 40px; 
+    height: 40px; 
     border-radius: 50%; /* Hace que el elemento sea circular */
     background-size: cover; /* Asegura que la imagen de fondo cubra completamente el espacio */
     margin-right: 10px; /* Añade espacio entre el ícono y el texto */
@@ -231,7 +230,7 @@
     }
 
     .divinity-ia-chat-container {
-        display: block; /* Muestra la columna de productos inicialmente */
+        display: block; 
         width: 100%;
         height: 100%;
         padding: 2rem;
@@ -262,7 +261,7 @@
     }
     
     .add-to-cart:hover {
-        color: #b19cd9; /* Un morado más claro cuando se pasa el mouse */
+        color: #b19cd9; 
     }
 
 }
@@ -277,7 +276,7 @@
 @media (min-width: 769px) {
     .divinity-ia-products-column {
         width: 320px; /* Ancho fijo solo para escritorio */
-        /* Otros estilos para escritorio */
+        
     }
 
     .divinity-ia-chat-container {

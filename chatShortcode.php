@@ -234,7 +234,7 @@ function divinity_ia_chat_shortcode() {
 
         jQuery(document).ready(function($) {
             $('#add-to-cart-btn').on('click', function() {
-                // Código que se ejecuta cuando el botón sea pulsado
+                // Código que se ejecuta cuando el botón add-to-cart-btn sea pulsado
                 console.log("productosConfiguracionPC:", productosConfiguracionPC);
                 if (!productosConfiguracionPC || productosConfiguracionPC.length === 0) {
                     alert("No hay productos seleccionados para añadir al carrito.");
@@ -273,9 +273,9 @@ function divinity_ia_chat_shortcode() {
 
         jQuery(document).ready(function($) {
             $('.lista-de-productos-container').on('click', '.btn-add-to-cart', function() {
+                // Código que se ejecuta cuando el botón btn-add-to-cart sea pulsado
                 let productoId = $(this).data('producto-id');
                 console.log('Añadiendo al carrito el producto con ID:', productoId);
-
                 $.ajax({
                     url: '<?php echo admin_url('admin-ajax.php'); ?>',
                     type: 'POST',

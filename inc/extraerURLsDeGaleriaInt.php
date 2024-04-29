@@ -1,8 +1,12 @@
 <?php
-
+//===================================================================================================================================================
+// funcion_para_extraer_urls_de_galeria_int()
+//===================================================================================================================================================
+// Devuelve una lista de las URLs de todos los productos seleccionados por el asistente
+//===================================================================================================================================================
 require_once('obtencionDeProductos.php');
 add_action('wp_ajax_extraer_urls_de_galeria_int', 'funcion_para_extraer_urls_de_galeria_int');
-add_action('wp_ajax_nopriv_extraer_urls_de_galeria_int', 'funcion_para_extraer_urls_de_galeria_int'); // Si necesitas que usuarios no logueados puedan hacer esta solicitud.
+add_action('wp_ajax_nopriv_extraer_urls_de_galeria_int', 'funcion_para_extraer_urls_de_galeria_int'); // Usuarios no logueados puedan hacer esta solicitud.
 
 function funcion_para_extraer_urls_de_galeria_int() {
 
@@ -14,7 +18,6 @@ function funcion_para_extraer_urls_de_galeria_int() {
 
     $urls = [];
 
-    // Asumiendo que cada nombre de componente puede ser único
     foreach ($respuesta['listadoConLosComponentes'] as $componente) {
         foreach ($productos as $producto) {
             // Comparar el nombre del componente con el nombre del producto
@@ -22,13 +25,13 @@ function funcion_para_extraer_urls_de_galeria_int() {
                 if (!empty($producto['galeria'])) {
                     // Usa el nombre o ID del componente como clave
                     $urls[$componente['nombre']] = $producto['galeria'];
-                    break; // Rompe el ciclo interno una vez que encuentres la coincidencia
+                    break; // Rompe el ciclo interno una vez que encuentra la coincidencia
                 }
             }
         }
     }
 
-    // Ordenar el arreglo de URLs según el arreglo de componentes
+    // Ordenar el array de URLs según el array de componentes
     $urlsOrdenadas = [];
     foreach ($respuesta['listadoConLosComponentes'] as $componente) {
         if (array_key_exists($componente['nombre'], $urls)) {
@@ -37,5 +40,5 @@ function funcion_para_extraer_urls_de_galeria_int() {
     }
 
     echo json_encode($urlsOrdenadas);
-    wp_die(); // Esto es importante para terminar correctamente la ejecución en un manejador AJAX de WordPress
+    wp_die(); 
 }
