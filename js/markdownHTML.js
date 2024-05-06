@@ -1,6 +1,7 @@
 //===================================================================================================================
 // Convertir de markdown a HTML
 //===================================================================================================================
+
 function markdownHTML(text) {
     // Convertir encabezados
     text = text.replace(/^### (.*$)/gim, '<h3>$1</h3>');
@@ -19,3 +20,6 @@ function markdownHTML(text) {
 
     return text;
 }
+
+//Utilizado para los test
+module.exports = markdownHTML;
