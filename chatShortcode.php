@@ -4,6 +4,8 @@ function divinity_ia_chat_shortcode() {
     wp_enqueue_style('divinity-ia-chat-style', plugins_url('css/styleChatShortcode.css', __FILE__));
     //Llamada al archivo mostrarMensajesDeProgreso.js
     wp_enqueue_script('divinity-progress-messages', plugins_url('js/mostrarMensajesDeProgreso.js', __FILE__), array('jquery'), null, true);
+    //Llamada al archivo markdownHTML.js
+    wp_enqueue_script('divinity-markdownHTML', plugins_url('js/markdownHTML.js', __FILE__), array('jquery'), null, true);
     // Iniciar almacenamiento en búfer de salida 
     ob_start();
     //==================================================================================================
@@ -142,7 +144,7 @@ function divinity_ia_chat_shortcode() {
                                     // Toma el texto de la respuesta
                                     const textoHTML = resultadoProcesado.respuesta;
 
-                                    const textoConvertidoHTML = simpleMarkdownToHTML(textoHTML);
+                                    const textoConvertidoHTML = markdownHTML(textoHTML);
                                     
                                     // Comienza a construir la salida
                                     let htmlOutput = '<div class="respuesta-ra"><span class="icono-ra"></span><span class="nombre-ra">RA:</span><br>' + textoConvertidoHTML + '<br>';
@@ -200,26 +202,7 @@ function divinity_ia_chat_shortcode() {
             var messagesContainer = jQuery('.divinity-ia-chat-messages');
             messagesContainer.scrollTop(messagesContainer.prop("scrollHeight"));
         }
-
-        function simpleMarkdownToHTML(text) {
-            // Convertir encabezados
-            text = text.replace(/^### (.*$)/gim, '<h3>$1</h3>');
-            text = text.replace(/^## (.*$)/gim, '<h2>$1</h2>');
-            text = text.replace(/^# (.*$)/gim, '<h1>$1</h1>');
-
-            // Convertir negritas e itálicas
-            text = text.replace(/\*\*(.*)\*\*/gim, '<strong>$1</strong>');
-            text = text.replace(/\*(.*)\*/gim, '<em>$1</em>');
-
-            // Convertir enlaces
-            text = text.replace(/\[([^\]]+)\]\(([^)]+)\)/gim, '<a href="$2">$1</a>');
-
-            // Convertir saltos de línea a etiquetas <br>
-            text = text.replace(/\n/gim, '<br>');
-
-            return text;
-        }
-        
+    
         // Ajustar la altura del textarea automáticamente según su contenido
         document.getElementById('divinity-ia-chat-input').addEventListener('input', function() {
             this.style.height = 'auto';
