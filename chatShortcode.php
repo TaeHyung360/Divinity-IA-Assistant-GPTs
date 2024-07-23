@@ -107,7 +107,7 @@ function divinity_ia_chat_shortcode() {
                                                     if (resultadoProcesado && resultadoProcesado.listadoConLosComponentes && resultadoProcesado.listadoConLosComponentes.length > 0) {
                                                         let productosHTML = '<ul class="lista-de-productos">';
                                                         resultadoProcesado.listadoConLosComponentes.forEach(function(producto, index) {
-                                                            // Asume que `urlsGaleria` es un array con las URLs en el mismo orden que los productos
+                                                            
                                                             let urlImagen = urlsGaleria[index]; // Acceder a la URL de la imagen usando el índice
 
                                                             // Agregar la imagen al HTML del producto
@@ -119,7 +119,7 @@ function divinity_ia_chat_shortcode() {
                                                             </li>`; 
                                                         });
                                                         productosHTML += '</ul>';
-                                                        // Reemplazar el contenido de la lista de productos con los nuevos productos
+                                                        // Reemplaza el contenido de la lista de productos con los nuevos productos
                                                         $('.lista-de-productos-container').html(productosHTML);
                                                     }else {
                                                         // Mostrar un mensaje si no hay productos
@@ -137,7 +137,7 @@ function divinity_ia_chat_shortcode() {
                                             }
                                         });
                                     } else {
-                                        // Ccaso donde no hay componentes nuevos para actualizar
+                                        // Caso donde no hay componentes nuevos para actualizar
                                         console.log("No hay nuevos componentes para actualizar.");
                                     }
 
@@ -149,7 +149,7 @@ function divinity_ia_chat_shortcode() {
                                     // Comienza a construir la salida
                                     let htmlOutput = '<div class="respuesta-ra"><span class="icono-ra"></span><span class="nombre-ra">RA:</span><br>' + textoConvertidoHTML + '<br>';
 
-                                    // Si el listado de componentes existe, añádelo al HTML como lista
+                                    // Si el listado de componentes existe, lo añádo al HTML como lista
                                     if (resultadoProcesado.listadoConLosComponentes && resultadoProcesado.listadoConLosComponentes.length > 0) {
                                         htmlOutput += '<ul>'; // comienzo de la lista
 
@@ -178,8 +178,6 @@ function divinity_ia_chat_shortcode() {
                                     // Restaurar el estado de la interfaz
                                     document.getElementById('loading').style.display = 'none';
                                     document.getElementById('divinity-ia-chat-submit').style.display = 'block';
-                                    // Aquí podrías manejar diferentes tipos de errores o realizar acciones específicas
-                                    // Por ejemplo, puedes decidir loggear el error, enviarlo a un sistema de monitoreo, etc.
                                 }                                
                             },
                             error : function(jqXHR, textStatus, errorThrown) {
@@ -203,7 +201,7 @@ function divinity_ia_chat_shortcode() {
             messagesContainer.scrollTop(messagesContainer.prop("scrollHeight"));
         }
     
-        // Ajustar la altura del textarea automáticamente según su contenido
+        // Ajusta la altura del textarea automáticamente según su contenido
         document.getElementById('divinity-ia-chat-input').addEventListener('input', function() {
             this.style.height = 'auto';
             this.style.height = (this.scrollHeight) + 'px';
@@ -257,7 +255,7 @@ function divinity_ia_chat_shortcode() {
         });
 
         jQuery(document).ready(function($) {
-            // Delegación de eventos para manejar clics en botones que se agregan dinámicamente
+            // Agregar un prodcucto al carrito
             $('.lista-de-productos-container').on('click', '.add-to-cart-button', function() {
                 var productoId = $(this).data('producto-id'); // Obtener el ID del producto desde el atributo data
 
