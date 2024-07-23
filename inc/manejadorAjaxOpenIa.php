@@ -11,7 +11,7 @@ function manejar_mensaje_ajax() {
 
     // Comprueba si la sesión ya tiene la información del producto enviada
     if (empty($_SESSION['productos_enviados'])) {
-        $resumenProductos = json_encode(obtenerProductos()); // Obtiene el resumen de los productos
+        $resumenProductos = json_encode(obtenerProductos()); // Obtiene los productos
         $mensaje = "[Productos de la tienda: " . $resumenProductos . "] " . $mensaje;
         $_SESSION['productos_enviados'] = true;  // Marca que los productos han sido enviados
     }
@@ -69,7 +69,7 @@ function manejar_mensaje_ajax() {
             echo json_encode(['success' => false, 'message' => 'Tiempo de espera excedido.']);
         }
     }
-    wp_die(); // Esto es requerido para terminar adecuadamente la ejecución del script
+    wp_die(); // Es utilizado para terminar adecuadamente la ejecución del script
 }
 // Registra la función como un 'action' para manejar mensajes AJAX en WordPress
 add_action('wp_ajax_enviar_mensaje_a_openai', 'manejar_mensaje_ajax');
