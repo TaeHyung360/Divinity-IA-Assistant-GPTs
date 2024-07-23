@@ -8,7 +8,7 @@ function modificar_asistente_openai($assistant_id, $file_ids){
 
     $body = [
         'file_ids' => [$file_ids]  // Los IDs de los archivos
-        // Se pueden agregar campos adicionales como 'model', 'name', 'description', etc., si es necesario
+        // Se pueden agregar campos adicionales como 'model', 'name', 'description', si es necesario
     ];
 
     $args = [
